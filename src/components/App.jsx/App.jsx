@@ -154,8 +154,8 @@ const TR = {
     ],
     disclaimer:"WARNING — Monte Carlo results are probabilistic estimates based solely on provided parameters. This is NOT financial advice. Always verify challenge rules with official documentation. Past performance does not guarantee future results.",
     by:"CREATED BY",leg:"LEGAL NOTICE",
-    legTxt:"© 2025 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.",
-    priv:"PRIVACY POLICY",terms:"TERMS OF USE",cont:"CONTACT",
+    legTxt:"© 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.",
+    priv:"PRIVACY POLICY",terms:"TERMS OF USE",cont:"CONTACT",legNotice:"LEGAL NOTICE",
     excellent:"EXCELLENT",high:"HIGH",moderate:"MODERATE",low:"LOW",vlow:"VERY LOW",
     firmph:"ENTER FIRM NAME",
   },
@@ -190,8 +190,8 @@ const TR = {
     ],
     disclaimer:"AVERTISSEMENT — Les résultats Monte Carlo sont des estimations basées uniquement sur les paramètres fournis. Ce n'est PAS un conseil financier. Vérifiez toujours les règles officielles. Les performances passées ne garantissent pas les performances futures.",
     by:"CRÉÉ PAR",leg:"MENTIONS LÉGALES",
-    legTxt:"© 2025 RAYTHAN WEB DESIGN. TOUS DROITS RÉSERVÉS. FOURNI À TITRE ÉDUCATIF ET INFORMATIF UNIQUEMENT. NE CONSTITUE PAS UN CONSEIL FINANCIER OU D'INVESTISSEMENT. LES RÉSULTATS MONTE CARLO SONT BASÉS UNIQUEMENT SUR LES PARAMÈTRES FOURNIS. LES RÈGLES DES PROP FIRMS VARIENT — CONSULTEZ TOUJOURS LA DOCUMENTATION OFFICIELLE.",
-    priv:"POLITIQUE CONFIDENTIALITÉ",terms:"CONDITIONS D'UTILISATION",cont:"CONTACT",
+    legTxt:"© 2026 RAYTHAN WEB DESIGN. TOUS DROITS RÉSERVÉS. FOURNI À TITRE ÉDUCATIF ET INFORMATIF UNIQUEMENT. NE CONSTITUE PAS UN CONSEIL FINANCIER OU D'INVESTISSEMENT. LES RÉSULTATS MONTE CARLO SONT BASÉS UNIQUEMENT SUR LES PARAMÈTRES FOURNIS. LES RÈGLES DES PROP FIRMS VARIENT — CONSULTEZ TOUJOURS LA DOCUMENTATION OFFICIELLE.",
+    priv:"POLITIQUE CONFIDENTIALITÉ",terms:"CONDITIONS D'UTILISATION",cont:"CONTACT",legNotice:"MENTIONS LÉGALES",
     excellent:"EXCELLENTE",high:"ÉLEVÉE",moderate:"MODÉRÉE",low:"FAIBLE",vlow:"TRÈS FAIBLE",
     firmph:"ENTREZ LE NOM DE LA FIRM",
   },
@@ -521,7 +521,7 @@ export default function App() {
           </div>
           <button onClick={() => setLang(l => l === "en" ? "fr" : "en")}
             style={{ background: "var(--bg2)", border: "1px solid var(--dimb)", color: "var(--amber)", padding: "6px 14px", cursor: "pointer", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: 2 }}>
-            [{lang === "en" ? "FR" : "EN"}]
+            [{lang === "en" ? "🇫🇷 FR" : "🇬🇧 EN"}]
           </button>
         </div>
       </header>
@@ -791,7 +791,7 @@ export default function App() {
       </main>
 
       {/* ══ FOOTER ══════════════════════════════════════════════════ */}
-      <footer style={{ marginTop: 36, borderTop: "2px solid #221000", background: "#040200", padding: "24px 24px" }}>
+      <footer style={{ marginTop: 36, borderTop: "2px solid #ffaa00", background: "#1a1a1a", padding: "24px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 14, marginBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -802,7 +802,7 @@ export default function App() {
               </div>
             </div>
             <div style={{ display: "flex", gap: 20 }}>
-              {[t.priv, t.terms, t.cont].map(l => (
+              {[t.priv, t.terms, t.cont, t.legNotice].map(l => (
                 <span key={l} onClick={() => setModalType(l)} style={{ color: "var(--dimb)", fontSize: 10, cursor: "pointer", letterSpacing: 1, transition: "color .15s" }}
                   onMouseEnter={e => e.target.style.color = "var(--amber3)"}
                   onMouseLeave={e => e.target.style.color = "var(--dimb)"}>

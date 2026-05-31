@@ -154,6 +154,7 @@ const TR = {
     ],
     disclaimer:"WARNING — Monte Carlo results are probabilistic estimates based solely on provided parameters. This is NOT financial advice. Always verify challenge rules with official documentation. Past performance does not guarantee future results.",
     by:"CREATED BY",leg:"",
+    style:{ color: '#FF4500' },
     legTxt:"© 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.",
     priv:"PRIVACY POLICY",terms:"TERMS OF USE",cont:"CONTACT",legNotice:"LEGAL NOTICE",
     excellent:"EXCELLENT",high:"HIGH",moderate:"MODERATE",low:"LOW",vlow:"VERY LOW",

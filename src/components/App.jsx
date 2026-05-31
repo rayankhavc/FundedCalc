@@ -791,7 +791,7 @@ export default function App() {
       </main>
 
       {/* ══ FOOTER ══════════════════════════════════════════════════ */}
-      <footer style={{ marginTop: 36, borderTop: "2px solid #ffaa00", background: "#1a1a1a", padding: "24px 24px" }}>
+      <footer style={{ marginTop: 36, borderTop: "2px solid #ffaa00", background: "#000000", padding: "24px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 14, marginBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -820,7 +820,7 @@ export default function App() {
 
       {/* MODAL */}
       {modalType && (
-        <div onClick={() => setModalType(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10000, cursor: "pointer" }}>
+        <div onClick={() => setModalType(null)} style={{ position: "fixed", inset: 0, background: "rgba(219, 113, 14, 0.9)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10000, cursor: "pointer" }}>
           <div onClick={e => e.stopPropagation()} style={{ background: "var(--bg1)", border: "2px solid var(--amber)", maxWidth: 600, width: "90%", maxHeight: "80vh", overflow: "auto", padding: 24, cursor: "default" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <div style={{ fontFamily: "var(--vt)", fontSize: 24, color: "var(--amber)", letterSpacing: 2 }}>{modalType}</div>

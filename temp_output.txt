@@ -1,0 +1,9 @@
+Get-Content : L'accäs au chemin d'accäs 'C:\Users\rir0u\OneDrive\Bureau\Raythan web design trade 
+app\src\components\App.jsx' est refusÇ.
+Au caractäre Ligne:1 : 1
++ Get-Content 'src\components\App.jsx' -Raw
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : PermissionDenied: (C:\Users\rir0u\...ponents\App.jsx:String) [Get-Content], Unauthorized 
+   AccessException
+    + FullyQualifiedErrorId : GetContentReaderUnauthorizedAccessError,Microsoft.PowerShell.Commands.GetContentCommand
+ 

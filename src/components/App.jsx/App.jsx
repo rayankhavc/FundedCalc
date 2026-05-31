@@ -125,7 +125,7 @@ input[type=range]::-webkit-slider-thumb{
 const TR = {
   en:{
     title:"PROP FIRM CHALLENGE CALCULATOR",
-    sub:"MONTE CARLO ENGINE v2.1  ·  STRATEGY PROBABILITY ANALYZER  ·  BY RAYTHAN WEB DESIGN",
+    sub:"MONTE CARLO ENGINE v2.1  ·  STRATEGY PROBABILITY ANALYZER",
     firm:"> PROP FIRM",acct:"> ACCOUNT SIZE",
     phases:"> CHALLENGE PHASES",add:"[+ ADD PHASE]",del:"[REMOVE]",
     target:"PROFIT TARGET",maxdd:"MAX DRAWDOWN",daily:"DAILY DRAWDOWN",
@@ -154,14 +154,24 @@ const TR = {
     ],
     disclaimer:"WARNING — Monte Carlo results are probabilistic estimates based solely on provided parameters. This is NOT financial advice. Always verify challenge rules with official documentation. Past performance does not guarantee future results.",
     by:"CREATED BY",leg:"LEGAL NOTICE",
-    legTxt:"© 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.",
+    legTxt:"© 2026 FundedCalc. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.",
     priv:"PRIVACY POLICY",terms:"TERMS OF USE",cont:"CONTACT",legNotice:"LEGAL NOTICE",
     excellent:"EXCELLENT",high:"HIGH",moderate:"MODERATE",low:"LOW",vlow:"VERY LOW",
-    firmph:"ENTER FIRM NAME",
+    firmph:"ENTER FIRM NAME",,
+    brand:"FundedCalc",
+    modal:{
+      legalTitle:"Legal Notice",
+      legalText:"FundedCalc (2026) — Legal Notice:\nFundedCalc is provided for educational and informational purposes only and does not constitute financial advice. FundedCalc respects applicable data protection laws, including the GDPR. The tool operates primarily client-side; no personal data is collected unless voluntarily submitted by the user. Users must verify official challenge rules independently.",
+      privacyTitle:"Privacy Policy",
+      privacyText:"Last updated: 2026.\nFundedCalc operates client-side and does not collect personal data by default. Calculations run in the user's browser. No cookies, analytics or third-party trackers are used. If contact information is provided voluntarily, it will be used only to respond to inquiries and stored securely in compliance with applicable law.",
+      termsTitle:"Terms of Use",
+      termsText:"This tool is provided \"as is\" for educational purposes only. Monte Carlo simulations are probabilistic estimates based on user-provided parameters and cannot guarantee future performance. Trading involves substantial risk of loss. FundedCalc is not a financial advisor and does not offer investment advice. By using this tool you accept these terms.",
+      close:"Close"
+    },
   },
   fr:{
     title:"CALCULATEUR CHALLENGE PROP FIRM",
-    sub:"MOTEUR MONTE CARLO v2.1  ·  ANALYSEUR DE PROBABILITÉ STRATÉGIQUE  ·  BY RAYTHAN WEB DESIGN",
+    sub:"MOTEUR MONTE CARLO v2.1  ·  ANALYSEUR DE PROBABILITÉ STRATÉGIQUE",
     firm:"> PROP FIRM",acct:"> TAILLE DU COMPTE",
     phases:"> PHASES DU CHALLENGE",add:"[+ AJOUTER PHASE]",del:"[SUPPRIMER]",
     target:"OBJECTIF PROFIT",maxdd:"DRAWDOWN MAX",daily:"DRAWDOWN JOURNALIER",
@@ -190,7 +200,7 @@ const TR = {
     ],
     disclaimer:"AVERTISSEMENT — Les résultats Monte Carlo sont des estimations basées uniquement sur les paramètres fournis. Ce n'est PAS un conseil financier. Vérifiez toujours les règles officielles. Les performances passées ne garantissent pas les performances futures.",
     by:"CRÉÉ PAR",leg:"MENTIONS LÉGALES",
-    legTxt:"© 2026 RAYTHAN WEB DESIGN. TOUS DROITS RÉSERVÉS. FOURNI À TITRE ÉDUCATIF ET INFORMATIF UNIQUEMENT. NE CONSTITUE PAS UN CONSEIL FINANCIER OU D'INVESTISSEMENT. LES RÉSULTATS MONTE CARLO SONT BASÉS UNIQUEMENT SUR LES PARAMÈTRES FOURNIS. LES RÈGLES DES PROP FIRMS VARIENT — CONSULTEZ TOUJOURS LA DOCUMENTATION OFFICIELLE.",
+    legTxt:"© 2026 FundedCalc. FOURNI À TITRE ÉDUCATIF ET INFORMATIF UNIQUEMENT. NE CONSTITUE PAS UN CONSEIL FINANCIER OU D'INVESTISSEMENT. LES RÉSULTATS MONTE CARLO SONT BASÉS UNIQUEMENT SUR LES PARAMÈTRES FOURNIS. LES RÈGLES DES PROP FIRMS VARIENT — CONSULTEZ TOUJOURS LA DOCUMENTATION OFFICIELLE.",
     priv:"POLITIQUE CONFIDENTIALITÉ",terms:"CONDITIONS D'UTILISATION",cont:"CONTACT",legNotice:"MENTIONS LÉGALES",
     excellent:"EXCELLENTE",high:"ÉLEVÉE",moderate:"MODÉRÉE",low:"FAIBLE",vlow:"TRÈS FAIBLE",
     firmph:"ENTREZ LE NOM DE LA FIRM",
@@ -434,7 +444,7 @@ export default function App() {
   const [strat, setStrat] = useState({ winRate: 50, rr: 2, riskPct: 1, tpd: 3 });
   const [results, setResults] = useState(null);
   const [running, setRunning] = useState(false);
-  const [modalType, setModalType] = useState(null);
+  const [modalContent, setModalContent] = useState(null);
 
   const firm = FIRMS[firmKey];
   const acct = firmKey === "custom" ? customAcct : acctSize;
@@ -520,8 +530,8 @@ export default function App() {
             <div style={{ fontSize: 9, color: "var(--text2)", letterSpacing: 1, marginTop: 2 }}>{t.sub}</div>
           </div>
           <button onClick={() => setLang(l => l === "en" ? "fr" : "en")}
-            style={{ background: "var(--bg2)", border: "1px solid var(--dimb)", color: "var(--amber)", padding: "6px 14px", cursor: "pointer", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: 2 }}>
-            [{lang === "en" ? "🇫🇷 FR" : "🇬🇧 EN"}]
+            style={{ background: "var(--bg2)", border: "1px solid var(--dimb)", color: "var(--amber)", padding: "6px 14px", cursor: "pointer", fontFamily: "var(--mono)", fontSize: 16, letterSpacing: 2 }}>
+            {lang === "en" ? "🇬🇧 EN" : "🇫🇷 FR"}
           </button>
         </div>
       </header>
@@ -791,22 +801,26 @@ export default function App() {
       </main>
 
       {/* ══ FOOTER ══════════════════════════════════════════════════ */}
-      <footer style={{ marginTop: 36, borderTop: "2px solid #ffaa00", background: "#1a1a1a", padding: "24px 24px" }}>
+      <footer className="bg-black text-white" style={{ marginTop: 36, borderTop: "2px solid #ffaa00", padding: "24px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 14, marginBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <span style={{ fontFamily: "var(--vt)", fontSize: 30, color: "var(--amber)", ...glow("#ffaa00") }}>📈</span>
               <div>
                 <div style={{ fontSize: 9, color: "var(--dimb)", letterSpacing: 2, marginBottom: 2 }}>{t.by}</div>
-                <div style={{ fontFamily: "var(--vt)", fontSize: 22, color: "var(--amber)", letterSpacing: 3, ...glow("#ffaa00") }}>RAYTHAN WEB DESIGN</div>
+                <div style={{ fontFamily: "var(--vt)", fontSize: 22, color: "var(--amber)", letterSpacing: 3, ...glow("#ffaa00") }}>{t.brand}</div>
               </div>
             </div>
             <div style={{ display: "flex", gap: 20 }}>
-              {[t.priv, t.terms, t.cont, t.legNotice].map(l => (
-                <span key={l} onClick={() => setModalType(l)} style={{ color: "var(--dimb)", fontSize: 10, cursor: "pointer", letterSpacing: 1, transition: "color .15s" }}
+              {[
+                { key: "legal", label: t.leg },
+                { key: "privacy", label: t.priv },
+                { key: "terms", label: t.terms }
+              ].map(item => (
+                <span key={item.key} onClick={() => setModalContent(item.key)} style={{ color: "var(--dimb)", fontSize: 10, cursor: "pointer", letterSpacing: 1, transition: "color .15s" }}
                   onMouseEnter={e => e.target.style.color = "var(--amber3)"}
                   onMouseLeave={e => e.target.style.color = "var(--dimb)"}>
-                  {l}
+                  {item.label}
                 </span>
               ))}
             </div>
@@ -819,38 +833,19 @@ export default function App() {
       </footer>
 
       {/* MODAL */}
-      {modalType && (
-        <div onClick={() => setModalType(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10000, cursor: "pointer" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "var(--bg1)", border: "2px solid var(--amber)", maxWidth: 600, width: "90%", maxHeight: "80vh", overflow: "auto", padding: 24, cursor: "default" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-              <div style={{ fontFamily: "var(--vt)", fontSize: 24, color: "var(--amber)", letterSpacing: 2 }}>{modalType}</div>
-              <button onClick={() => setModalType(null)} style={{ background: "none", border: "none", color: "var(--amber)", fontSize: 24, cursor: "pointer", fontFamily: "var(--mono)" }}>X</button>
+      {modalContent && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" onClick={() => setModalContent(null)}>
+          <div className="bg-neutral-900 text-white rounded-md max-w-3xl w-[90%] max-h-[80vh] overflow-auto p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <div style={{ fontFamily: "var(--vt)", fontSize: 20 }}>
+                {modalContent === 'legal' ? t.leg : modalContent === 'privacy' ? t.priv : t.terms}
+              </div>
+              <button className="px-3 py-1 border border-neutral-700 rounded bg-transparent hover:bg-neutral-800" onClick={() => setModalContent(null)}>{t.modal.close}</button>
             </div>
-            <div style={{ color: "var(--text)", fontSize: 12, lineHeight: 1.8, letterSpacing: .3 }}>
-              {modalType === t.priv && (
-                <>
-                  <p style={{ marginBottom: 12 }}>LAST UPDATED: JANUARY 2025</p>
-                  <p style={{ marginBottom: 12 }}>WE COLLECT NO PERSONAL DATA. THIS TOOL OPERATES ENTIRELY CLIENT-SIDE. ALL CALCULATIONS ARE PERFORMED LOCALLY IN YOUR BROWSER.</p>
-                  <p style={{ marginBottom: 12 }}>NO COOKIES. NO TRACKING. NO ANALYTICS. NO THIRD-PARTY SERVICES.</p>
-                  <p>YOUR DATA STAYS ON YOUR DEVICE.</p>
-                </>
-              )}
-              {modalType === t.terms && (
-                <>
-                  <p style={{ marginBottom: 12 }}>THIS TOOL IS PROVIDED "AS IS" FOR EDUCATIONAL PURPOSES ONLY.</p>
-                  <p style={{ marginBottom: 12 }}>MONTE CARLO SIMULATIONS ARE PROBABILISTIC ESTIMATES BASED ON USER-PROVIDED PARAMETERS. THEY DO NOT GUARANTEE FUTURE RESULTS.</p>
-                  <p style={{ marginBottom: 12 }}>THIS IS NOT FINANCIAL ADVICE. ALWAYS VERIFY PROP FIRM RULES WITH OFFICIAL DOCUMENTATION.</p>
-                  <p>BY USING THIS TOOL, YOU ACKNOWLEDGE THAT TRADING INVOLVES SUBSTANTIAL RISK OF LOSS.</p>
-                </>
-              )}
-              {modalType === t.cont && (
-                <>
-                  <p style={{ marginBottom: 12 }}>RAYTHAN WEB DESIGN</p>
-                  <p style={{ marginBottom: 12 }}>EMAIL: CONTACT@RAYTHAN.COM</p>
-                  <p style={{ marginBottom: 12 }}>FOR BUSINESS INQUIRIES, PARTNERSHIPS, OR CUSTOM DEVELOPMENT PROJECTS.</p>
-                  <p>RESPONSE TIME: 24-48 HOURS</p>
-                </>
-              )}
+            <div className="text-sm leading-6 whitespace-pre-wrap">
+              {modalContent === 'legal' && t.modal.legalText}
+              {modalContent === 'privacy' && t.modal.privacyText}
+              {modalContent === 'terms' && t.modal.termsText}
             </div>
           </div>
         </div>

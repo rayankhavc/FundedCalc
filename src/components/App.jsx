@@ -191,7 +191,7 @@ const TR = {
     ],
     disclaimer:"AVERTISSEMENT — Les résultats Monte Carlo sont des estimations basées uniquement sur les paramètres fournis. Ce n'est PAS un conseil financier. Vérifiez toujours les règles officielles. Les performances passées ne garantissent pas les performances futures.",
     by:"CRÉÉ PAR",leg:"",
-    legTxt: ( <p style={{ color: "#ff0000", fontSize: "11px", textAlign: "center", opacity: 0.8, marginTop: "2rem", paddingBottom: "1rem", backgroundColor: "transparent" }}>
+    legTxt: ( <p style={{ color: "#ffffff", fontSize: "11px", textAlign: "center", opacity: 0.8, marginTop: "2rem", paddingBottom: "1rem", backgroundColor: "transparent" }}>
   © 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.
 </p> ),
     priv:"POLITIQUE CONFIDENTIALITÉ",terms:"CONDITIONS D'UTILISATION",cont:"CONTACT",legNotice:"MENTIONS LÉGALES",

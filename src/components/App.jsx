@@ -154,7 +154,7 @@ const TR = {
     ],
     disclaimer:"WARNING — Monte Carlo results are probabilistic estimates based solely on provided parameters. This is NOT financial advice. Always verify challenge rules with official documentation. Past performance does not guarantee future results.",
     by:"CREATED BY",leg:"",
-    style:{ color: '#FF4500' },
+    style:{ color: '#ffffff' },
     legTxt:"© 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.",
     priv:"PRIVACY POLICY",terms:"TERMS OF USE",cont:"CONTACT",legNotice:"LEGAL NOTICE",
     excellent:"EXCELLENT",high:"HIGH",moderate:"MODERATE",low:"LOW",vlow:"VERY LOW",
@@ -816,7 +816,9 @@ export default function App() {
           </div>
           <div style={{ borderTop: "1px dashed #1a0a00", paddingTop: 14 }}>
             <div style={{ fontSize: 9, color: "var(--dimb)", letterSpacing: 2, marginBottom: 6, textTransform: "uppercase" }}>{t.leg}</div>
-            <p style={{ margin: 0, color: "#1a0a00", fontSize: 9, lineHeight: 1.9, letterSpacing: .3 }}>{t.legTxt}</p>
+            <div style={{ margin: 0, color: "#1a0a00", fontSize: 9, lineHeight: 1.9, letterSpacing: 0.3 }}>
+              {t.legTxt}
+            </div>
           </div>
         </div>
       </footer>
@@ -832,7 +834,7 @@ export default function App() {
             <div style={{ color: "var(--text)", fontSize: 12, lineHeight: 1.8, letterSpacing: .3 }}>
               {modalType === t.priv && (
                 <>
-                  <p style={{ marginBottom: 12 }}>LAST UPDATED: JANUARY 2025</p>
+                  <p style={{ marginBottom: 12 }}>LAST UPDATED: JUNE 2026</p>
                   <p style={{ marginBottom: 12 }}>WE COLLECT NO PERSONAL DATA. THIS TOOL OPERATES ENTIRELY CLIENT-SIDE. ALL CALCULATIONS ARE PERFORMED LOCALLY IN YOUR BROWSER.</p>
                   <p style={{ marginBottom: 12 }}>NO COOKIES. NO TRACKING. NO ANALYTICS. NO THIRD-PARTY SERVICES.</p>
                   <p>YOUR DATA STAYS ON YOUR DEVICE.</p>

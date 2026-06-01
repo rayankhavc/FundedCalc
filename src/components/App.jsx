@@ -155,7 +155,9 @@ const TR = {
     disclaimer:"WARNING — Monte Carlo results are probabilistic estimates based solely on provided parameters. This is NOT financial advice. Always verify challenge rules with official documentation. Past performance does not guarantee future results.",
     by:"CREATED BY",leg:"",
     style:{ color: '#ffffff' },
-    legTxt:"© 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.",
+    legTxt: ( <p style={{ color: "#ffffff", fontSize: "11px", textAlign: "center", opacity: 0.8, marginTop: "2rem", paddingBottom: "1rem", backgroundColor: "transparent" }}>
+  © 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.
+</p> ),
     priv:"PRIVACY POLICY",terms:"TERMS OF USE",cont:"CONTACT",legNotice:"LEGAL NOTICE",
     excellent:"EXCELLENT",high:"HIGH",moderate:"MODERATE",low:"LOW",vlow:"VERY LOW",
     firmph:"ENTER FIRM NAME",
@@ -825,7 +827,7 @@ export default function App() {
 
       {/* MODAL */}
       {modalType && (
-        <div onClick={() => setModalType(null)} style={{ position: "fixed", inset: 0, background: "rgba(219, 113, 14, 0.9)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10000, cursor: "pointer" }}>
+        <div onClick={() => setModalType(null)} style={{ position: "fixed", inset: 0, background: "#121212", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10000, cursor: "pointer" }}>
           <div onClick={e => e.stopPropagation()} style={{ background: "var(--bg1)", border: "2px solid var(--amber)", maxWidth: 600, width: "90%", maxHeight: "80vh", overflow: "auto", padding: 24, cursor: "default" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <div style={{ fontFamily: "var(--vt)", fontSize: 24, color: "var(--amber)", letterSpacing: 2 }}>{modalType}</div>
@@ -854,6 +856,40 @@ export default function App() {
                   <p style={{ marginBottom: 12 }}>EMAIL: CONTACT@RAYTHAN.COM</p>
                   <p style={{ marginBottom: 12 }}>FOR BUSINESS INQUIRIES, PARTNERSHIPS, OR CUSTOM DEVELOPMENT PROJECTS.</p>
                   <p>RESPONSE TIME: 24-48 HOURS</p>
+                </>
+              )}
+              {modalType === t.legNotice && lang === "fr" && (
+                <>
+                  <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>ÉDITEUR DU SITE</p>
+                  <p style={{ marginBottom: 12 }}>Le site et l'application FundedCalc sont édités par Raythan Web Design, entreprise individuelle basée à Nantes, France.</p>
+                  <p style={{ marginBottom: 12 }}>Contact : raythanwebdesign@gmail.com</p>
+
+                  <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>HÉBERGEUR DU SITE</p>
+                  <p style={{ marginBottom: 12 }}>Le site est hébergé par la société Vercel Inc., situé au 650 California St, San Francisco, CA 94108, États-Unis.</p>
+                  <p style={{ marginBottom: 12 }}>Site web : https://vercel.com</p>
+
+                  <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>PROPRIÉTÉ INTELLECTUELLE</p>
+                  <p style={{ marginBottom: 12 }}>L'ensemble des contenus (textes, graphismes, logos, codes sources, simulateurs) présents sur ce site est la propriété exclusive de Raythan Web Design. Toute reproduction ou représentation totale ou partielle de ce site est interdite sans autorisation préalable.</p>
+
+                  <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>DONNÉES PERSONNELLES & COOKIES</p>
+                  <p>Conformément au RGPD, ce site n'utilise aucun cookie de traçage, ne collecte aucune donnée personnelle et n'utilise aucun service tiers. Toutes les simulations mathématiques sont exécutées localement dans le navigateur de l'utilisateur.</p>
+                </>
+              )}
+              {modalType === t.legNotice && lang === "en" && (
+                <>
+                  <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>WEBSITE EDITOR</p>
+                  <p style={{ marginBottom: 12 }}>The website and the FundedCalc application are edited by Raythan Web Design, a sole proprietorship based in Nantes, France.</p>
+                  <p style={{ marginBottom: 12 }}>Contact: raythanwebdesign@gmail.com</p>
+
+                  <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>WEB HOSTING</p>
+                  <p style={{ marginBottom: 12 }}>The website is hosted by Vercel Inc., located at 650 California St, San Francisco, CA 94108, USA.</p>
+                  <p style={{ marginBottom: 12 }}>Website: https://vercel.com</p>
+
+                  <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>INTELLECTUAL PROPERTY</p>
+                  <p style={{ marginBottom: 12 }}>All content (text, graphics, logos, source code, simulators) on this website is the exclusive property of Raythan Web Design. Any total or partial reproduction or representation of this site is strictly prohibited without prior authorization.</p>
+
+                  <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>PERSONAL DATA & COOKIES</p>
+                  <p>In compliance with the GDPR, this website does not use any tracking cookies, collects no personal data, and uses no third-party services. All mathematical simulations are executed entirely client-side within the user's browser.</p>
                 </>
               )}
             </div>

@@ -963,18 +963,13 @@ export default function App() {
               {/* Free number input — no min/max, full user control */}
               <input
                 className="ni"
-                type="number"
+                type="text"
+                inputMode="decimal"
                 value={acctSize}
-                onChange={e => {
-                  const v = e.target.value;
-                  // Accept partial input (e.g. while typing) — store as number when valid
-                  const n = parseFloat(v);
-                  if (!isNaN(n)) setAcctSize(n);
-                }}
+                onChange={e => setAcctSize(e.target.value)}
                 onBlur={e => {
-                  // On blur, clamp to a sane minimum so calculations don't break
                   const n = parseFloat(e.target.value);
-                  if (isNaN(n) || n <= 0) setAcctSize(1000);
+                  setAcctSize(isNaN(n) || n <= 0 ? 1000 : n);
                 }}
                 placeholder="10000"
                 style={{ marginBottom: 6 }}
@@ -1037,10 +1032,9 @@ export default function App() {
                     <div key={f}>
                       <span style={{ ...LBL, fontSize: 9 }}>{label}</span>
                       <div style={{ position: "relative" }}>
-                        <input className="ni" type="number"
+                        <input className="ni" type="text" inputMode="decimal"
                           value={phases[safe][f]}
                           onChange={e => editPhase(safe, f, e.target.value)}
-                          step={f.includes("Days") ? 1 : 0.5}
                           style={{ paddingRight: 26 }} />
                         <span style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", color: "var(--dimb)", fontSize: 11, pointerEvents: "none" }}>{sfx}</span>
                       </div>

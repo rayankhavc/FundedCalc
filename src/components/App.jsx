@@ -166,22 +166,22 @@ const TR = {
     advice:"> STRATEGY ANALYSIS & RECOMMENDATIONS",
     how:"> HOW TO USE THIS TOOL",
     steps:[
-      "Select your target prop firm — challenge parameters auto-fill from official rules.",
+      "Select your target prop firm challenge parameters auto-fill from official rules.",
       "Adjust each phase: profit target, max drawdown, daily limit, and day range.",
       "Enter backtested strategy data: win rate, R/R ratio, and risk per trade.",
       "Set your average number of trades per day from your trading plan.",
-      "Execute the simulation — 5,000 Monte Carlo runs calculate pass probability.",
+      "Execute the simulation 5,000 Monte Carlo runs calculate pass probability.",
       "Review the equity path chart and advice panel to optimize your approach.",
     ],
-    disclaimer:"WARNING — Monte Carlo results are probabilistic estimates based solely on provided parameters. This is NOT financial advice. Always verify challenge rules with official documentation. Past performance does not guarantee future results.",
+    disclaimer:"WARNING Monte Carlo results are probabilistic estimates based solely on provided parameters. This is NOT financial advice. Always verify challenge rules with official documentation. Past performance does not guarantee future results.",
     share:"SHARE RESULTS",
     sharing:"GENERATING IMAGE…",
     shareCopied:"✓ COPIED TO CLIPBOARD",
     shareDownloaded:"✓ IMAGE SAVED",
-    shareError:"! SHARE FAILED — RETRY",
+    shareError:"! SHARE FAILED RETRY",
     by:"CREATED BY",leg:"",
     style:{ color: '#ffffff' },
-    legTxt:(<p style={{color:"#ffffff",fontSize:"11px",textAlign:"center",opacity:0.8,marginTop:"2rem",paddingBottom:"1rem",backgroundColor:"transparent"}}>© 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.</p>),
+    legTxt:(<p style={{color:"#ffffff",fontSize:"11px",textAlign:"center",opacity:0.8,marginTop:"2rem",paddingBottom:"1rem",backgroundColor:"transparent"}}>© 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY ALWAYS CONSULT OFFICIAL DOCUMENTATION.</p>),
     priv:"PRIVACY POLICY",terms:"TERMS OF USE",cont:"CONTACT",legNotice:"LEGAL NOTICE",
     excellent:"EXCELLENT",high:"HIGH",moderate:"MODERATE",low:"LOW",vlow:"VERY LOW",
     firmph:"ENTER FIRM NAME",
@@ -208,21 +208,21 @@ const TR = {
     advice:"> ANALYSE & RECOMMANDATIONS STRATÉGIQUES",
     how:"> COMMENT UTILISER CET OUTIL",
     steps:[
-      "Sélectionnez votre prop firm — les paramètres du challenge se remplissent automatiquement.",
+      "Sélectionnez votre prop firm les paramètres du challenge se remplissent automatiquement.",
       "Configurez chaque phase : objectif de profit, drawdown max, limite journalière et plage de jours.",
       "Saisissez vos données de backtest : taux de réussite, ratio R/R et risque par trade.",
       "Définissez votre nombre habituel de trades par jour selon votre plan de trading.",
-      "Lancez la simulation — 5 000 passes Monte Carlo calculent votre probabilité de succès.",
+      "Lancez la simulation 5 000 passes Monte Carlo calculent votre probabilité de succès.",
       "Analysez les courbes et les recommandations pour optimiser votre approche avant le challenge.",
     ],
-    disclaimer:"AVERTISSEMENT — Les résultats Monte Carlo sont des estimations basées uniquement sur les paramètres fournis. Ce n'est PAS un conseil financier. Vérifiez toujours les règles officielles. Les performances passées ne garantissent pas les performances futures.",
+    disclaimer:"AVERTISSEMENT Les résultats Monte Carlo sont des estimations basées uniquement sur les paramètres fournis. Ce n'est PAS un conseil financier. Vérifiez toujours les règles officielles. Les performances passées ne garantissent pas les performances futures.",
     share:"PARTAGER MES RÉSULTATS",
     sharing:"GÉNÉRATION EN COURS…",
     shareCopied:"✓ COPIÉ DANS LE PRESSE-PAPIER",
     shareDownloaded:"✓ IMAGE SAUVEGARDÉE",
-    shareError:"! ÉCHEC — RÉESSAYER",
+    shareError:"! ÉCHEC RÉESSAYER",
     by:"CRÉÉ PAR",leg:"",
-    legTxt:(<p style={{color:"#ffffff",fontSize:"11px",textAlign:"center",opacity:0.8,marginTop:"2rem",paddingBottom:"1rem",backgroundColor:"transparent"}}>© 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.</p>),
+    legTxt:(<p style={{color:"#ffffff",fontSize:"11px",textAlign:"center",opacity:0.8,marginTop:"2rem",paddingBottom:"1rem",backgroundColor:"transparent"}}>© 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY ALWAYS CONSULT OFFICIAL DOCUMENTATION.</p>),
     priv:"POLITIQUE CONFIDENTIALITÉ",terms:"CONDITIONS D'UTILISATION",cont:"CONTACT",legNotice:"MENTIONS LÉGALES",
     excellent:"EXCELLENTE",high:"ÉLEVÉE",moderate:"MODÉRÉE",low:"FAIBLE",vlow:"TRÈS FAIBLE",
     firmph:"ENTREZ LE NOM DE LA FIRM",
@@ -700,58 +700,58 @@ function getAdvice(strat, results, phases, lang) {
 
   if (ev <= 0) {
     items.push({ type: "danger",
-      en: `[ERR] NEGATIVE EDGE — EV = ${ev.toFixed(3)}R. With ${winRate}% WR + ${rr}:1 R/R you lose money on average. Required win rate for break-even: ${bk.toFixed(1)}%. Fix your strategy before funding any challenge.`,
-      fr: `[ERR] EDGE NÉGATIF — VE = ${ev.toFixed(3)}R. Avec ${winRate}% de taux et un R/R de ${rr}:1 vous perdez en moyenne. Taux requis pour le seuil de rentabilité : ${bk.toFixed(1)}%. Corrigez votre stratégie avant de financer un challenge.`
+      en: `[ERR] NEGATIVE EDGE EV = ${ev.toFixed(3)}R. With ${winRate}% WR + ${rr}:1 R/R you lose money on average. Required win rate for break-even: ${bk.toFixed(1)}%. Fix your strategy before funding any challenge.`,
+      fr: `[ERR] EDGE NÉGATIF VE = ${ev.toFixed(3)}R. Avec ${winRate}% de taux et un R/R de ${rr}:1 vous perdez en moyenne. Taux requis pour le seuil de rentabilité : ${bk.toFixed(1)}%. Corrigez votre stratégie avant de financer un challenge.`
     });
   } else if (ev > 0.3) {
     items.push({ type: "success",
-      en: `[OK] STRONG EDGE — EV = +${ev.toFixed(3)}R/trade. Mathematical advantage is solid and well above break-even. Focus on execution consistency and emotional discipline to capture this edge across the full challenge.`,
-      fr: `[OK] EDGE SOLIDE — VE = +${ev.toFixed(3)}R/trade. Avantage mathématique confirmé et largement au-dessus du seuil. Concentrez-vous sur la régularité d'exécution et la discipline émotionnelle pour réaliser cet avantage sur l'ensemble du challenge.`
+      en: `[OK] STRONG EDGE EV = +${ev.toFixed(3)}R/trade. Mathematical advantage is solid and well above break-even. Focus on execution consistency and emotional discipline to capture this edge across the full challenge.`,
+      fr: `[OK] EDGE SOLIDE VE = +${ev.toFixed(3)}R/trade. Avantage mathématique confirmé et largement au-dessus du seuil. Concentrez-vous sur la régularité d'exécution et la discipline émotionnelle pour réaliser cet avantage sur l'ensemble du challenge.`
     });
   } else {
     items.push({ type: "info",
-      en: `[INFO] POSITIVE EDGE — EV = +${ev.toFixed(3)}R/trade. Profitable but with a modest margin. Statistical variance will play a significant role — expect swings and stay disciplined through inevitable drawdown periods.`,
-      fr: `[INFO] EDGE POSITIF — VE = +${ev.toFixed(3)}R/trade. Rentable mais avec une marge modeste. La variance statistique jouera un rôle important — anticipez les fluctuations et restez discipliné pendant les périodes de drawdown inévitables.`
+      en: `[INFO] POSITIVE EDGE EV = +${ev.toFixed(3)}R/trade. Profitable but with a modest margin. Statistical variance will play a significant role — expect swings and stay disciplined through inevitable drawdown periods.`,
+      fr: `[INFO] EDGE POSITIF VE = +${ev.toFixed(3)}R/trade. Rentable mais avec une marge modeste. La variance statistique jouera un rôle important — anticipez les fluctuations et restez discipliné pendant les périodes de drawdown inévitables.`
     });
   }
 
   const maxDailyLoss = riskPct * tpd;
   if (maxDailyLoss > p.dailyDD * 0.75) {
     items.push({ type: "warning",
-      en: `[WARN] DAILY DD EXPOSURE — ${tpd} trades × ${riskPct}% risk = ${maxDailyLoss.toFixed(1)}% max daily loss. Your ${p.dailyDD}% daily limit can be hit in a single bad session. Recommended max risk/trade: ${(p.dailyDD * 0.6 / tpd).toFixed(2)}%.`,
-      fr: `[WARN] SUREXPOSITION JOURNALIÈRE — ${tpd} trades × ${riskPct}% = ${maxDailyLoss.toFixed(1)}% de perte max en une journée. Votre limite de ${p.dailyDD}% peut être atteinte en une seule mauvaise session. Risque max recommandé : ${(p.dailyDD * 0.6 / tpd).toFixed(2)}%/trade.`
+      en: `[WARN] DAILY DD EXPOSURE ${tpd} trades × ${riskPct}% risk = ${maxDailyLoss.toFixed(1)}% max daily loss. Your ${p.dailyDD}% daily limit can be hit in a single bad session. Recommended max risk/trade: ${(p.dailyDD * 0.6 / tpd).toFixed(2)}%.`,
+      fr: `[WARN] SUREXPOSITION JOURNALIÈRE ${tpd} trades × ${riskPct}% = ${maxDailyLoss.toFixed(1)}% de perte max en une journée. Votre limite de ${p.dailyDD}% peut être atteinte en une seule mauvaise session. Risque max recommandé : ${(p.dailyDD * 0.6 / tpd).toFixed(2)}%/trade.`
     });
   }
 
   const streak     = Math.ceil(p.maxDD / riskPct);
   const streakProb = ((1 - winRate / 100) ** streak * 100).toFixed(2);
   items.push({ type: riskPct > 1.5 ? "warning" : "info",
-    en: `[${riskPct > 1.5 ? "WARN" : "INFO"}] DRAWDOWN ANALYSIS — ${streak} consecutive losses breach max DD at current ${riskPct}% risk. With ${winRate}% WR, probability of ${streak}-loss streak: ${streakProb}%. ${riskPct > 1.5 ? "HIGH RISK — strongly consider reducing position size." : "Risk level appears manageable."}`,
-    fr: `[${riskPct > 1.5 ? "WARN" : "INFO"}] ANALYSE DRAWDOWN — ${streak} pertes consécutives dépassent le DD max à ${riskPct}% de risque. Avec ${winRate}% de taux, probabilité de ${streak} pertes de suite : ${streakProb}%. ${riskPct > 1.5 ? "RISQUE ÉLEVÉ — réduisez fortement la taille des positions." : "Le niveau de risque semble gérable."}`
+    en: `[${riskPct > 1.5 ? "WARN" : "INFO"}] DRAWDOWN ANALYSIS ${streak} consecutive losses breach max DD at current ${riskPct}% risk. With ${winRate}% WR, probability of ${streak}-loss streak: ${streakProb}%. ${riskPct > 1.5 ? "HIGH RISK — strongly consider reducing position size." : "Risk level appears manageable."}`,
+    fr: `[${riskPct > 1.5 ? "WARN" : "INFO"}] ANALYSE DRAWDOWN ${streak} pertes consécutives dépassent le DD max à ${riskPct}% de risque. Avec ${winRate}% de taux, probabilité de ${streak} pertes de suite : ${streakProb}%. ${riskPct > 1.5 ? "RISQUE ÉLEVÉ — réduisez fortement la taille des positions." : "Le niveau de risque semble gérable."}`
   });
 
   if (prob < 0.15) {
     items.push({ type: "danger",
-      en: `[ERR] CRITICAL PROBABILITY — ${(prob * 100).toFixed(1)}% pass rate is extremely low. Challenge parameters are far too restrictive for this strategy profile. Recommended actions: increase R/R ratio, reduce risk per trade below 0.5%, or significantly improve win rate before attempting.`,
-      fr: `[ERR] PROBABILITÉ CRITIQUE — ${(prob * 100).toFixed(1)}% de taux de succès est extrêmement faible. Les paramètres du challenge sont trop restrictifs pour ce profil de stratégie. Actions recommandées : augmenter le R/R, réduire le risque sous 0.5%/trade, ou améliorer significativement le taux de réussite avant de tenter.`
+      en: `[ERR] CRITICAL PROBABILITY ${(prob * 100).toFixed(1)}% pass rate is extremely low. Challenge parameters are far too restrictive for this strategy profile. Recommended actions: increase R/R ratio, reduce risk per trade below 0.5%, or significantly improve win rate before attempting.`,
+      fr: `[ERR] PROBABILITÉ CRITIQUE ${(prob * 100).toFixed(1)}% de taux de succès est extrêmement faible. Les paramètres du challenge sont trop restrictifs pour ce profil de stratégie. Actions recommandées : augmenter le R/R, réduire le risque sous 0.5%/trade, ou améliorer significativement le taux de réussite avant de tenter.`
     });
   } else if (prob > 0.65) {
     items.push({ type: "success",
-      en: `[OK] FAVORABLE CONDITIONS — ${(prob * 100).toFixed(1)}% pass probability. Your strategy aligns well with these challenge rules. Execute with strict discipline. The primary threat is now emotional deviation: revenge trading, overtrading after losses, or breaking the daily limit.`,
-      fr: `[OK] CONDITIONS FAVORABLES — ${(prob * 100).toFixed(1)}% de probabilité de succès. Votre stratégie s'aligne bien avec les règles du challenge. Exécutez avec une discipline stricte. La principale menace est maintenant la déviation émotionnelle : revenge trading, surtrading après les pertes, ou dépassement de la limite journalière.`
+      en: `[OK] FAVORABLE CONDITIONS ${(prob * 100).toFixed(1)}% pass probability. Your strategy aligns well with these challenge rules. Execute with strict discipline. The primary threat is now emotional deviation: revenge trading, overtrading after losses, or breaking the daily limit.`,
+      fr: `[OK] CONDITIONS FAVORABLES ${(prob * 100).toFixed(1)}% de probabilité de succès. Votre stratégie s'aligne bien avec les règles du challenge. Exécutez avec une discipline stricte. La principale menace est maintenant la déviation émotionnelle : revenge trading, surtrading après les pertes, ou dépassement de la limite journalière.`
     });
   }
 
   if (riskRuin > 0.05) {
     items.push({ type: "warning",
-      en: `[WARN] ELEVATED RUIN RISK — ${(riskRuin * 100).toFixed(1)}% of simulations ended in full account breach. This metric should be near zero. Halving your risk per trade would dramatically improve ruin protection while preserving profitability.`,
-      fr: `[WARN] RISQUE DE RUINE ÉLEVÉ — ${(riskRuin * 100).toFixed(1)}% des simulations se sont soldées par une violation totale du compte. Ce chiffre devrait être proche de zéro. Diviser votre risque par trade par deux améliorerait drastiquement la protection contre la ruine tout en préservant la rentabilité.`
+      en: `[WARN] ELEVATED RUIN RISK ${(riskRuin * 100).toFixed(1)}% of simulations ended in full account breach. This metric should be near zero. Halving your risk per trade would dramatically improve ruin protection while preserving profitability.`,
+      fr: `[WARN] RISQUE DE RUINE ÉLEVÉ ${(riskRuin * 100).toFixed(1)}% des simulations se sont soldées par une violation totale du compte. Ce chiffre devrait être proche de zéro. Diviser votre risque par trade par deux améliorerait drastiquement la protection contre la ruine tout en préservant la rentabilité.`
     });
   }
 
   items.push({ type: "info",
-    en: `[INFO] SAMPLE SIZE — Backtest reliability requires minimum 200–300 trades in real market conditions. Small samples produce high parameter uncertainty. Over-optimized backtests consistently overstate live performance by 30–50%. The more trades in your sample, the more reliable these simulations become.`,
-    fr: `[INFO] TAILLE D'ÉCHANTILLON — La fiabilité d'un backtest nécessite au minimum 200–300 trades en conditions réelles. Les petits échantillons génèrent une forte incertitude sur les paramètres. Les backtests sur-optimisés surestiment systématiquement les performances en live de 30–50%. Plus votre échantillon est large, plus ces simulations deviennent fiables.`
+    en: `[INFO] SAMPLE SIZE Backtest reliability requires minimum 200–300 trades in real market conditions. Small samples produce high parameter uncertainty. Over-optimized backtests consistently overstate live performance by 30–50%. The more trades in your sample, the more reliable these simulations become.`,
+    fr: `[INFO] TAILLE D'ÉCHANTILLON La fiabilité d'un backtest nécessite au minimum 200–300 trades en conditions réelles. Les petits échantillons génèrent une forte incertitude sur les paramètres. Les backtests sur-optimisés surestiment systématiquement les performances en live de 30–50%. Plus votre échantillon est large, plus ces simulations deviennent fiables.`
   });
 
   return items;

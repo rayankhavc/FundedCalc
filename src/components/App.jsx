@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 /* ═══════════════════════════════════════════════════════════
-   CSS — AMBER RETRO TERMINAL THEME
+   CSS — AMBER RETRO TERMINAL THEME  v2.2
 ═══════════════════════════════════════════════════════════ */
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap');
@@ -83,6 +83,27 @@ input[type=range]::-webkit-slider-thumb{
 .runbtn:hover:not(:disabled){color:var(--bg);}
 .runbtn:disabled{border-color:var(--dimb);color:var(--dimb);cursor:not-allowed;}
 
+/* SHARE BUTTON */
+.sharebtn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:10px 16px;border:1px solid var(--dim);background:transparent;
+  color:var(--text2);font-family:var(--mono);font-size:11px;letter-spacing:2px;
+  cursor:pointer;transition:all .2s;text-transform:uppercase;
+}
+.sharebtn:hover:not(:disabled){border-color:var(--amber3);color:var(--amber3);background:rgba(204,102,0,.04);}
+.sharebtn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* TOAST */
+@keyframes toastIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:20000;
+  background:var(--bg1);border:1px solid var(--amber3);
+  color:var(--amber);padding:10px 20px;font-family:var(--mono);
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  animation:toastIn .25s ease both;pointer-events:none;
+  box-shadow:0 0 20px rgba(255,170,0,.08);
+}
+
 /* ASCII PROGRESS BAR */
 .pbar{height:10px;background:var(--bg2);border:1px solid var(--dimb);overflow:hidden;position:relative;}
 .pfill{
@@ -91,18 +112,18 @@ input[type=range]::-webkit-slider-thumb{
   background-image:repeating-linear-gradient(90deg,transparent 0,transparent 5px,rgba(0,0,0,.35) 5px,rgba(0,0,0,.35) 6px);
 }
 
-/* STAT BOXES */
-.sbox{background:var(--bg2);border:1px solid var(--dim);padding:10px 12px;}
+/* STAT BOXES — v2.2: improved readability */
+.sbox{background:var(--bg2);border:1px solid var(--dim);padding:12px 14px;}
 
 /* SECTION HEADER */
 .shd{
-  font-family:var(--vt);font-size:16px;color:var(--amber);
+  font-family:var(--vt);font-size:17px;color:var(--amber);
   letter-spacing:3px;text-transform:uppercase;
   border-bottom:1px solid var(--dim);padding-bottom:6px;margin-bottom:14px;
 }
 
-/* ADVICE */
-.adv{border-left:3px solid;padding:12px 14px;background:rgba(0,0,0,.4);}
+/* ADVICE CARD */
+.adv{border-left:3px solid;padding:13px 16px;background:rgba(0,0,0,.4);}
 
 /* ANIMATIONS */
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
@@ -125,7 +146,7 @@ input[type=range]::-webkit-slider-thumb{
 const TR = {
   en:{
     title:"PROP FIRM CHALLENGE CALCULATOR",
-    sub:"MONTE CARLO ENGINE v2.1  ·  STRATEGY PROBABILITY ANALYZER  ·  BY RAYTHAN WEB DESIGN",
+    sub:"MONTE CARLO ENGINE v2.2  ·  STRATEGY PROBABILITY ANALYZER  ·  BY RAYTHAN WEB DESIGN",
     firm:"> PROP FIRM",acct:"> ACCOUNT SIZE",
     phases:"> CHALLENGE PHASES",add:"[+ ADD PHASE]",del:"[REMOVE]",
     target:"PROFIT TARGET",maxdd:"MAX DRAWDOWN",daily:"DAILY DRAWDOWN",
@@ -153,18 +174,21 @@ const TR = {
       "Review the equity path chart and advice panel to optimize your approach.",
     ],
     disclaimer:"WARNING — Monte Carlo results are probabilistic estimates based solely on provided parameters. This is NOT financial advice. Always verify challenge rules with official documentation. Past performance does not guarantee future results.",
+    share:"SHARE RESULTS",
+    sharing:"GENERATING IMAGE…",
+    shareCopied:"✓ COPIED TO CLIPBOARD",
+    shareDownloaded:"✓ IMAGE SAVED",
+    shareError:"! SHARE FAILED — RETRY",
     by:"CREATED BY",leg:"",
     style:{ color: '#ffffff' },
-    legTxt: ( <p style={{ color: "#ffffff", fontSize: "11px", textAlign: "center", opacity: 0.8, marginTop: "2rem", paddingBottom: "1rem", backgroundColor: "transparent" }}>
-  © 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.
-</p> ),
+    legTxt:(<p style={{color:"#ffffff",fontSize:"11px",textAlign:"center",opacity:0.8,marginTop:"2rem",paddingBottom:"1rem",backgroundColor:"transparent"}}>© 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.</p>),
     priv:"PRIVACY POLICY",terms:"TERMS OF USE",cont:"CONTACT",legNotice:"LEGAL NOTICE",
     excellent:"EXCELLENT",high:"HIGH",moderate:"MODERATE",low:"LOW",vlow:"VERY LOW",
     firmph:"ENTER FIRM NAME",
   },
   fr:{
     title:"CALCULATEUR CHALLENGE PROP FIRM",
-    sub:"MOTEUR MONTE CARLO v2.1  ·  ANALYSEUR DE PROBABILITÉ STRATÉGIQUE  ·  BY RAYTHAN WEB DESIGN",
+    sub:"MOTEUR MONTE CARLO v2.2  ·  ANALYSEUR DE PROBABILITÉ STRATÉGIQUE  ·  BY RAYTHAN WEB DESIGN",
     firm:"> PROP FIRM",acct:"> TAILLE DU COMPTE",
     phases:"> PHASES DU CHALLENGE",add:"[+ AJOUTER PHASE]",del:"[SUPPRIMER]",
     target:"OBJECTIF PROFIT",maxdd:"DRAWDOWN MAX",daily:"DRAWDOWN JOURNALIER",
@@ -192,10 +216,13 @@ const TR = {
       "Analysez les courbes et les recommandations pour optimiser votre approche avant le challenge.",
     ],
     disclaimer:"AVERTISSEMENT — Les résultats Monte Carlo sont des estimations basées uniquement sur les paramètres fournis. Ce n'est PAS un conseil financier. Vérifiez toujours les règles officielles. Les performances passées ne garantissent pas les performances futures.",
+    share:"PARTAGER MES RÉSULTATS",
+    sharing:"GÉNÉRATION EN COURS…",
+    shareCopied:"✓ COPIÉ DANS LE PRESSE-PAPIER",
+    shareDownloaded:"✓ IMAGE SAUVEGARDÉE",
+    shareError:"! ÉCHEC — RÉESSAYER",
     by:"CRÉÉ PAR",leg:"",
-    legTxt: ( <p style={{ color: "#ffffff", fontSize: "11px", textAlign: "center", opacity: 0.8, marginTop: "2rem", paddingBottom: "1rem", backgroundColor: "transparent" }}>
-  © 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.
-</p> ),
+    legTxt:(<p style={{color:"#ffffff",fontSize:"11px",textAlign:"center",opacity:0.8,marginTop:"2rem",paddingBottom:"1rem",backgroundColor:"transparent"}}>© 2026 RAYTHAN WEB DESIGN. ALL RIGHTS RESERVED. PROVIDED FOR EDUCATIONAL AND INFORMATIONAL PURPOSES ONLY. DOES NOT CONSTITUTE FINANCIAL OR INVESTMENT ADVICE. MONTE CARLO RESULTS BASED ON USER-PROVIDED PARAMETERS. PROP FIRM RULES VARY — ALWAYS CONSULT OFFICIAL DOCUMENTATION.</p>),
     priv:"POLITIQUE CONFIDENTIALITÉ",terms:"CONDITIONS D'UTILISATION",cont:"CONTACT",legNotice:"MENTIONS LÉGALES",
     excellent:"EXCELLENTE",high:"ÉLEVÉE",moderate:"MODÉRÉE",low:"FAIBLE",vlow:"TRÈS FAIBLE",
     firmph:"ENTREZ LE NOM DE LA FIRM",
@@ -203,33 +230,106 @@ const TR = {
 };
 
 /* ═══════════════════════════════════════════════════════════
-   PROP FIRMS DATA
+   PROP FIRMS DATA  — 10 firms (5 original + 5 new)
+   Sources: official challenge documentation as of 2026.
+   Always verify current rules on each firm's website.
 ═══════════════════════════════════════════════════════════ */
 const FIRMS = {
-  ftmo:{name:"FTMO",color:"#00dd77",
-    phases:[{name:"PHASE 1",profitTarget:10,maxDD:10,dailyDD:5,minDays:10,maxDays:30},{name:"PHASE 2",profitTarget:5,maxDD:10,dailyDD:5,minDays:10,maxDays:60}],
-    sizes:[10000,25000,50000,100000,200000]},
-  the5ers:{name:"THE 5%ERS",color:"#ffaa00",
-    phases:[{name:"PHASE 1",profitTarget:8,maxDD:8,dailyDD:4,minDays:0,maxDays:60},{name:"PHASE 2",profitTarget:5,maxDD:8,dailyDD:4,minDays:0,maxDays:60}],
-    sizes:[6000,12000,30000,80000]},
-  myfundedfx:{name:"MYFUNDEDFX",color:"#4499ff",
-    phases:[{name:"PHASE 1",profitTarget:8,maxDD:10,dailyDD:5,minDays:5,maxDays:30},{name:"PHASE 2",profitTarget:5,maxDD:10,dailyDD:5,minDays:5,maxDays:60}],
-    sizes:[10000,25000,50000,100000,200000]},
-  apex:{name:"APEX TRADER",color:"#ff4444",
-    phases:[{name:"EVALUATION",profitTarget:6,maxDD:6,dailyDD:3,minDays:7,maxDays:30}],
-    sizes:[25000,50000,100000,150000,250000]},
-  trueforex:{name:"TRUE FOREX",color:"#bb88ff",
-    phases:[{name:"PHASE 1",profitTarget:10,maxDD:10,dailyDD:5,minDays:5,maxDays:30},{name:"PHASE 2",profitTarget:5,maxDD:10,dailyDD:5,minDays:5,maxDays:60}],
-    sizes:[10000,25000,50000,100000,200000]},
-  custom:{name:"CUSTOM",color:"#ffee44",
+  // ── ORIGINAL 5 ──────────────────────────────────────────
+  ftmo:{
+    name:"FTMO", color:"#00dd77",
+    phases:[
+      {name:"PHASE 1",profitTarget:10,maxDD:10,dailyDD:5,minDays:10,maxDays:30},
+      {name:"PHASE 2",profitTarget:5, maxDD:10,dailyDD:5,minDays:10,maxDays:60},
+    ],
+    sizes:[10000,25000,50000,100000,200000],
+  },
+  the5ers:{
+    name:"THE 5%ERS", color:"#ffaa00",
+    phases:[
+      {name:"PHASE 1",profitTarget:8,maxDD:8,dailyDD:4,minDays:0,maxDays:60},
+      {name:"PHASE 2",profitTarget:5,maxDD:8,dailyDD:4,minDays:0,maxDays:60},
+    ],
+    sizes:[6000,12000,30000,80000],
+  },
+  myfundedfx:{
+    name:"MYFUNDEDFX", color:"#4499ff",
+    phases:[
+      {name:"PHASE 1",profitTarget:8, maxDD:10,dailyDD:5,minDays:5,maxDays:30},
+      {name:"PHASE 2",profitTarget:5, maxDD:10,dailyDD:5,minDays:5,maxDays:60},
+    ],
+    sizes:[10000,25000,50000,100000,200000],
+  },
+  apex:{
+    name:"APEX TRADER", color:"#ff4444",
+    phases:[
+      {name:"EVALUATION",profitTarget:6,maxDD:6,dailyDD:3,minDays:7,maxDays:30},
+    ],
+    sizes:[25000,50000,100000,150000,250000],
+  },
+  trueforex:{
+    name:"TRUE FOREX", color:"#bb88ff",
+    phases:[
+      {name:"PHASE 1",profitTarget:10,maxDD:10,dailyDD:5,minDays:5,maxDays:30},
+      {name:"PHASE 2",profitTarget:5, maxDD:10,dailyDD:5,minDays:5,maxDays:60},
+    ],
+    sizes:[10000,25000,50000,100000,200000],
+  },
+  // ── NEW FIRMS ───────────────────────────────────────────
+  fundingpips:{
+    name:"FUNDING PIPS", color:"#00bbff",
+    phases:[
+      {name:"PHASE 1",profitTarget:8,maxDD:8,dailyDD:5,minDays:0,maxDays:30},
+      {name:"PHASE 2",profitTarget:5,maxDD:8,dailyDD:5,minDays:0,maxDays:60},
+    ],
+    sizes:[5000,10000,25000,50000,100000,200000],
+  },
+  fundednext:{
+    name:"FUNDEDNEXT", color:"#ff6622",
+    phases:[
+      {name:"PHASE 1",profitTarget:10,maxDD:10,dailyDD:5,minDays:5,maxDays:30},
+      {name:"PHASE 2",profitTarget:5, maxDD:10,dailyDD:5,minDays:5,maxDays:60},
+    ],
+    sizes:[6000,15000,25000,50000,100000,200000],
+  },
+  alphacapital:{
+    name:"ALPHA CAPITAL", color:"#44ffcc",
+    phases:[
+      {name:"PHASE 1",profitTarget:10,maxDD:6,dailyDD:3,minDays:0,maxDays:45},
+      {name:"PHASE 2",profitTarget:5, maxDD:6,dailyDD:3,minDays:0,maxDays:60},
+    ],
+    sizes:[10000,25000,50000,100000,200000],
+  },
+  blueguardian:{
+    name:"BLUE GUARDIAN", color:"#4488ff",
+    phases:[
+      {name:"PHASE 1",profitTarget:8,maxDD:8,dailyDD:4,minDays:5,maxDays:45},
+      {name:"PHASE 2",profitTarget:4,maxDD:8,dailyDD:4,minDays:5,maxDays:45},
+    ],
+    sizes:[10000,25000,50000,100000,200000],
+  },
+  funderpro:{
+    name:"FUNDERPRO", color:"#ff44aa",
+    phases:[
+      {name:"PHASE 1",profitTarget:8,maxDD:8,dailyDD:4,minDays:0,maxDays:30},
+      {name:"PHASE 2",profitTarget:4,maxDD:8,dailyDD:4,minDays:0,maxDays:60},
+    ],
+    sizes:[5000,10000,25000,50000,100000],
+  },
+  custom:{
+    name:"CUSTOM", color:"#ffee44",
     phases:[{name:"PHASE 1",profitTarget:10,maxDD:10,dailyDD:5,minDays:10,maxDays:30}],
-    sizes:[]},
+    sizes:[],
+  },
 };
 
 /* ═══════════════════════════════════════════════════════════
-   MONTE CARLO ENGINE  — 5 000 simulations
+   MONTE CARLO ENGINE — 5 000 simulations
+   Runs synchronously inside a setTimeout(fn, 60) to release
+   the render thread before the heavy computation starts.
+   Typical runtime: 30–80 ms for 2 phases × 5 000 passes.
 ═══════════════════════════════════════════════════════════ */
-function simulate({winRate, rr, riskPct, tradesPerDay, phase, numSims = 5000}) {
+function simulate({ winRate, rr, riskPct, tradesPerDay, phase, numSims = 5000 }) {
   const { profitTarget, maxDD, dailyDD, minDays, maxDays } = phase;
   const pWin = winRate / 100;
   let passes = 0, ruins = 0, sumT = 0, sumP = 0, sumDD = 0, sumDays = 0;
@@ -285,17 +385,261 @@ function simulate({winRate, rr, riskPct, tradesPerDay, phase, numSims = 5000}) {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   SHARE CARD GENERATOR — Canvas API, zero external deps
+   Output: 1200×630 PNG blob (OG / Twitter card format).
+   Fonts VT323 + Share Tech Mono are already loaded by the
+   Google Fonts @import in CSS — available via canvas2D.
+═══════════════════════════════════════════════════════════ */
+async function generateShareCard(results, strat, phases, acct, firmName) {
+  const W = 1200, H = 630;
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Ensure Google Fonts are available in the canvas context
+  try {
+    await document.fonts.ready;
+    await Promise.race([
+      Promise.all([
+        document.fonts.load('40px VT323'),
+        document.fonts.load('12px "Share Tech Mono"'),
+      ]),
+      new Promise(r => setTimeout(r, 1500)),
+    ]);
+  } catch (_) { /* silent fallback — Courier New renders fine */ }
+
+  const VT = '"VT323","Share Tech Mono","Courier New",monospace';
+  const MN = '"Share Tech Mono","Courier New",monospace';
+
+  const pct = Math.round(results.overall * 100);
+  const probColor = pct > 65 ? '#99ff00' : pct > 40 ? '#ffdd00' : pct > 25 ? '#ffaa00' : pct > 10 ? '#ff7700' : '#ff3300';
+  const ev = (strat.winRate / 100) * strat.rr - (1 - strat.winRate / 100);
+  const evStr = `${ev >= 0 ? '+' : ''}${ev.toFixed(3)}R`;
+
+  // Helper: draw equity curves on a sub-canvas area
+  const drawCurves = (curves, aX, aY, aW, aH) => {
+    const sample = curves.slice(0, 50);
+    let minV = Infinity, maxV = -Infinity, maxLen = 2;
+    sample.forEach(c => {
+      if (c.pts.length > maxLen) maxLen = c.pts.length;
+      c.pts.forEach(v => { if (v < minV) minV = v; if (v > maxV) maxV = v; });
+    });
+    const vr = maxV - minV || 1;
+    const cX = i => aX + (i / (maxLen - 1)) * aW;
+    const cY = v => aY + aH - ((v - minV) / vr) * aH;
+    ctx.lineWidth = 1;
+    sample.filter(c => !c.pass).forEach(c => {
+      if (c.pts.length < 2) return;
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255,50,0,0.2)';
+      c.pts.forEach((v, i) => i === 0 ? ctx.moveTo(cX(i), cY(v)) : ctx.lineTo(cX(i), cY(v)));
+      ctx.stroke();
+    });
+    sample.filter(c => c.pass).forEach(c => {
+      if (c.pts.length < 2) return;
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(153,255,0,0.28)';
+      c.pts.forEach((v, i) => i === 0 ? ctx.moveTo(cX(i), cY(v)) : ctx.lineTo(cX(i), cY(v)));
+      ctx.stroke();
+    });
+  };
+
+  // ── Background ───────────────────────────────────────────
+  ctx.fillStyle = '#060400';
+  ctx.fillRect(0, 0, W, H);
+
+  // Dot grid
+  ctx.fillStyle = 'rgba(255,170,0,0.025)';
+  for (let x = 22; x < W; x += 44)
+    for (let y = 22; y < H; y += 44)
+      ctx.fillRect(x, y, 1, 1);
+
+  // Amber border lines
+  ctx.fillStyle = '#ffaa00';
+  ctx.fillRect(0, 0, W, 2);
+  ctx.fillRect(0, H - 2, W, 2);
+
+  // ── Header (0–70) ────────────────────────────────────────
+  ctx.fillStyle = '#0c0800';
+  ctx.fillRect(0, 2, W, 68);
+
+  ctx.strokeStyle = '#1a0a00';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, 70); ctx.lineTo(W, 70); ctx.stroke();
+
+  // Logo
+  ctx.font = `42px ${VT}`;
+  ctx.fillStyle = '#ffaa00';
+  ctx.textBaseline = 'alphabetic';
+  ctx.shadowColor = '#ffaa00';
+  ctx.shadowBlur = 14;
+  ctx.fillText('FUNDEDCALC_', 50, 55);
+  ctx.shadowBlur = 0;
+
+  // Firm + account size (right-aligned)
+  ctx.font = `12px ${MN}`;
+  ctx.fillStyle = '#553300';
+  ctx.textAlign = 'right';
+  ctx.fillText(`${String(firmName).toUpperCase()}  ·  $${Number(acct).toLocaleString('en')}`, W - 50, 55);
+  ctx.textAlign = 'left';
+
+  // ── Vertical divider ─────────────────────────────────────
+  ctx.strokeStyle = '#1a0a00';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(680, 70); ctx.lineTo(680, 558); ctx.stroke();
+
+  // ── LEFT COLUMN: Probability (x: 50–650) ─────────────────
+  ctx.font = `10px ${MN}`;
+  ctx.fillStyle = '#553300';
+  ctx.fillText('PASS  PROBABILITY', 50, 108);
+
+  // Big percentage number
+  ctx.font = `148px ${VT}`;
+  ctx.fillStyle = probColor;
+  ctx.shadowColor = probColor;
+  ctx.shadowBlur = 28;
+  ctx.fillText(`${pct}%`, 46, 272);
+  ctx.shadowBlur = 0;
+
+  // ASCII progress bar
+  const barLen = 20;
+  const barFilled = Math.round(pct / 100 * barLen);
+  ctx.font = `18px ${MN}`;
+  ctx.fillStyle = probColor;
+  ctx.fillText('█'.repeat(barFilled) + '░'.repeat(barLen - barFilled), 50, 308);
+
+  // Horizontal separator
+  ctx.strokeStyle = '#1a0a00';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(50, 342); ctx.lineTo(630, 342); ctx.stroke();
+
+  // 4-column stat grid
+  const statItems = [
+    { label: 'WIN RATE',   val: `${strat.winRate}%`        },
+    { label: 'R/R RATIO',  val: `1:${strat.rr}`            },
+    { label: 'RISK/TRADE', val: `${strat.riskPct}%`        },
+    { label: 'EDGE (EV)',  val: evStr                        },
+  ];
+  statItems.forEach((s, i) => {
+    const x = 50 + i * 148;
+    ctx.font = `9px ${MN}`;
+    ctx.fillStyle = '#553300';
+    ctx.fillText(s.label, x, 368);
+    ctx.font = `25px ${VT}`;
+    ctx.fillStyle = '#ffaa00';
+    ctx.shadowColor = '#ffaa00';
+    ctx.shadowBlur = 6;
+    ctx.fillText(s.val, x, 397);
+    ctx.shadowBlur = 0;
+  });
+
+  // Simulation count note
+  ctx.font = `9px ${MN}`;
+  ctx.fillStyle = '#2a1400';
+  ctx.fillText('5,000 MONTE CARLO SIMULATIONS', 50, 440);
+
+  // ── RIGHT COLUMN: Phase results (x: 710–1150) ────────────
+  const RX = 710;
+
+  ctx.font = `9px ${MN}`;
+  ctx.fillStyle = '#553300';
+  ctx.fillText('PHASE  RESULTS', RX, 108);
+
+  let phaseY = 128;
+  results.probs.forEach((p, i) => {
+    const ppct    = (p * 100).toFixed(1);
+    const pCol    = p > .65 ? '#99ff00' : p > .4 ? '#ffdd00' : p > .25 ? '#ffaa00' : p > .1 ? '#ff7700' : '#ff3300';
+    const pName   = (phases[i]?.name || `PHASE ${i + 1}`).toUpperCase();
+    const barMaxW = (W - 50) - RX;
+
+    ctx.font = `10px ${MN}`;
+    ctx.fillStyle = '#553300';
+    ctx.fillText(pName, RX, phaseY);
+
+    ctx.font = `26px ${VT}`;
+    ctx.fillStyle = pCol;
+    ctx.shadowColor = pCol;
+    ctx.shadowBlur = 10;
+    ctx.textAlign = 'right';
+    ctx.fillText(`${ppct}%`, W - 50, phaseY + 14);
+    ctx.textAlign = 'left';
+    ctx.shadowBlur = 0;
+
+    // Bar
+    ctx.fillStyle = '#120d00';
+    ctx.fillRect(RX, phaseY + 18, barMaxW, 6);
+    ctx.fillStyle = pCol;
+    ctx.fillRect(RX, phaseY + 18, barMaxW * p, 6);
+
+    // Sub-info
+    if (phases[i]) {
+      ctx.font = `9px ${MN}`;
+      ctx.fillStyle = '#2a1400';
+      ctx.fillText(
+        `TARGET ${phases[i].profitTarget}%  ·  DD ${phases[i].maxDD}%  ·  DAILY ${phases[i].dailyDD}%`,
+        RX, phaseY + 43
+      );
+    }
+
+    phaseY += 72;
+  });
+
+  // Mini equity chart (only if vertical space allows)
+  if (results.curves?.length > 0 && phaseY < 452) {
+    const cY = phaseY + 8;
+    const cH = 546 - cY;
+    const cW = (W - 50) - RX;
+    if (cH > 50) {
+      ctx.fillStyle = '#0c0800';
+      ctx.fillRect(RX, cY, cW, cH);
+      ctx.strokeStyle = '#1a0a00';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(RX, cY, cW, cH);
+      ctx.font = `8px ${MN}`;
+      ctx.fillStyle = '#2a1400';
+      ctx.fillText('MONTE CARLO EQUITY PATHS', RX, cY - 5);
+      drawCurves(results.curves, RX, cY, cW, cH);
+    }
+  }
+
+  // ── Footer (558–630) ─────────────────────────────────────
+  ctx.fillStyle = '#0c0800';
+  ctx.fillRect(0, 558, W, 72);
+  ctx.strokeStyle = '#1a0a00';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, 558); ctx.lineTo(W, 558); ctx.stroke();
+
+  ctx.font = `11px ${MN}`;
+  ctx.fillStyle = '#2a1400';
+  ctx.textAlign = 'left';
+  ctx.fillText('fundedcalc.fr', 50, 601);
+
+  ctx.font = `22px ${VT}`;
+  ctx.fillStyle = '#2a1400';
+  ctx.textAlign = 'center';
+  ctx.fillText('Simulated on FUNDEDCALC', W / 2, 601);
+
+  ctx.font = `9px ${MN}`;
+  ctx.fillStyle = '#2a1400';
+  ctx.textAlign = 'right';
+  ctx.fillText('Not financial advice  ·  Past performance ≠ future results', W - 50, 601);
+  ctx.textAlign = 'left';
+
+  return new Promise(resolve => canvas.toBlob(blob => resolve(blob), 'image/png'));
+}
+
+/* ═══════════════════════════════════════════════════════════
    RETRO GAUGE — big VT323 display
 ═══════════════════════════════════════════════════════════ */
 function RetroGauge({ value }) {
-  const pct = Math.max(0, Math.min(1, value));
-  const col = pct < .2 ? "#ff3300" : pct < .38 ? "#ff7700" : pct < .55 ? "#ffcc00" : pct < .72 ? "#aaff00" : "#00ffaa";
+  const pct  = Math.max(0, Math.min(1, value));
+  const col  = pct < .2 ? "#ff3300" : pct < .38 ? "#ff7700" : pct < .55 ? "#ffcc00" : pct < .72 ? "#aaff00" : "#00ffaa";
   const bars = 24, filled = Math.round(pct * bars);
-  const glow = `0 0 16px ${col}, 0 0 32px ${col}44`;
-
+  const glw  = `0 0 16px ${col}, 0 0 32px ${col}44`;
   return (
     <div style={{ textAlign: "center", padding: "8px 0" }}>
-      <div style={{ fontFamily: "var(--vt)", fontSize: 76, color: col, lineHeight: 1, textShadow: glow, letterSpacing: 4 }}>
+      <div style={{ fontFamily: "var(--vt)", fontSize: 76, color: col, lineHeight: 1, textShadow: glw, letterSpacing: 4 }}>
         {Math.round(pct * 100)}%
       </div>
       <div style={{ fontFamily: "var(--mono)", fontSize: 13, color: col, marginTop: 8, letterSpacing: 2, textShadow: `0 0 8px ${col}88` }}>
@@ -317,12 +661,11 @@ function EquityCurve({ curves, phase }) {
     maxLen = Math.max(maxLen, c.pts.length);
     c.pts.forEach(v => { minV = Math.min(minV, v); maxV = Math.max(maxV, v); });
   });
-  const vr = maxV - minV || 1;
-  const X = i => P.l + (i / (maxLen - 1)) * cw;
-  const Y = v => P.t + ch - ((v - minV) / vr) * ch;
+  const vr   = maxV - minV || 1;
+  const X    = i => P.l + (i / (maxLen - 1)) * cw;
+  const Y    = v => P.t + ch - ((v - minV) / vr) * ch;
   const pathD = pts => pts.map((v, i) => `${i ? "L" : "M"}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(" ");
-  const ty = Y(100 + phase.profitTarget), by = Y(100), dy = Y(100 - phase.maxDD);
-
+  const ty   = Y(100 + phase.profitTarget), by = Y(100), dy = Y(100 - phase.maxDD);
   return (
     <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", display: "block" }}>
       <rect x={P.l} y={P.t} width={cw} height={Math.max(0, ty - P.t)} fill="rgba(153,255,0,.04)" />
@@ -331,11 +674,11 @@ function EquityCurve({ curves, phase }) {
         <line key={t} x1={P.l + t * cw} y1={P.t} x2={P.l + t * cw} y2={H - P.b} stroke="#1a1000" strokeWidth={1} />
       ))}
       <line x1={P.l} y1={ty} x2={W - P.r} y2={ty} stroke="rgba(153,255,0,.55)" strokeWidth={1} strokeDasharray="5 4" />
-      <line x1={P.l} y1={by} x2={W - P.r} y2={by} stroke="rgba(255,170,0,.2)" strokeWidth={1} strokeDasharray="2 4" />
-      <line x1={P.l} y1={dy} x2={W - P.r} y2={dy} stroke="rgba(255,50,0,.55)" strokeWidth={1} strokeDasharray="5 4" />
-      {curves.filter(c => !c.pass).map((c, i) => <path key={`f${i}`} d={pathD(c.pts)} fill="none" stroke="rgba(255,50,0,.18)" strokeWidth={1} />)}
-      {curves.filter(c => c.pass).map((c, i) => <path key={`p${i}`} d={pathD(c.pts)} fill="none" stroke="rgba(153,255,0,.2)" strokeWidth={1} />)}
-      <line x1={P.l} y1={P.t} x2={P.l} y2={H - P.b} stroke="#331a00" strokeWidth={1} />
+      <line x1={P.l} y1={by} x2={W - P.r} y2={by} stroke="rgba(255,170,0,.2)"  strokeWidth={1} strokeDasharray="2 4" />
+      <line x1={P.l} y1={dy} x2={W - P.r} y2={dy} stroke="rgba(255,50,0,.55)"  strokeWidth={1} strokeDasharray="5 4" />
+      {curves.filter(c => !c.pass).map((c, i) => <path key={`f${i}`} d={pathD(c.pts)} fill="none" stroke="rgba(255,50,0,.18)"  strokeWidth={1} />)}
+      {curves.filter(c =>  c.pass).map((c, i) => <path key={`p${i}`} d={pathD(c.pts)} fill="none" stroke="rgba(153,255,0,.2)"   strokeWidth={1} />)}
+      <line x1={P.l} y1={P.t}    x2={P.l}    y2={H - P.b} stroke="#331a00" strokeWidth={1} />
       <line x1={P.l} y1={H - P.b} x2={W - P.r} y2={H - P.b} stroke="#331a00" strokeWidth={1} />
       <text x={P.l - 5} y={ty + 4} textAnchor="end" fill="#99ff00" style={{ fontFamily: "var(--mono)", fontSize: 9 }}>+{phase.profitTarget}%</text>
       <text x={P.l - 5} y={by + 4} textAnchor="end" fill="#553300" style={{ fontFamily: "var(--mono)", fontSize: 9 }}>BASE</text>
@@ -350,7 +693,7 @@ function EquityCurve({ curves, phase }) {
 function getAdvice(strat, results, phases, lang) {
   const { winRate, rr, riskPct, tpd } = strat;
   const { prob, riskRuin } = results;
-  const p = phases[0];
+  const p  = phases[0];
   const ev = (winRate / 100) * rr - (1 - winRate / 100);
   const bk = 100 / (rr + 1);
   const items = [];
@@ -380,7 +723,7 @@ function getAdvice(strat, results, phases, lang) {
     });
   }
 
-  const streak = Math.ceil(p.maxDD / riskPct);
+  const streak     = Math.ceil(p.maxDD / riskPct);
   const streakProb = ((1 - winRate / 100) ** streak * 100).toFixed(2);
   items.push({ type: riskPct > 1.5 ? "warning" : "info",
     en: `[${riskPct > 1.5 ? "WARN" : "INFO"}] DRAWDOWN ANALYSIS — ${streak} consecutive losses breach max DD at current ${riskPct}% risk. With ${winRate}% WR, probability of ${streak}-loss streak: ${streakProb}%. ${riskPct > 1.5 ? "HIGH RISK — strongly consider reducing position size." : "Risk level appears manageable."}`,
@@ -417,44 +760,54 @@ function getAdvice(strat, results, phases, lang) {
 /* ═══════════════════════════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════════════════════════ */
-const AC = { danger: "#ff3300", warning: "#ffaa00", success: "#99ff00", info: "#44aaff" };
+const AC   = { danger: "#ff3300", warning: "#ffaa00", success: "#99ff00", info: "#44aaff" };
 const pCol = p => p > .65 ? "#99ff00" : p > .4 ? "#ffdd00" : p > .25 ? "#ffaa00" : p > .1 ? "#ff7700" : "#ff3300";
 const pLbl = (p, t) => p > .65 ? t.excellent : p > .4 ? t.high : p > .25 ? t.moderate : p > .1 ? t.low : t.vlow;
-const fmt = (n, d = 0) => Number(n).toLocaleString("en", { maximumFractionDigits: d });
+const fmt  = (n, d = 0) => Number(n).toLocaleString("en", { maximumFractionDigits: d });
 const glow = c => ({ textShadow: `0 0 8px ${c}88` });
 
 /* ═══════════════════════════════════════════════════════════
    MAIN APP
 ═══════════════════════════════════════════════════════════ */
 export default function App() {
-  const [lang, setLang] = useState("en");
+  const [lang,       setLang]       = useState("en");
   const t = TR[lang];
 
-  const [firmKey, setFirmKey] = useState("ftmo");
+  const [firmKey,    setFirmKey]    = useState("ftmo");
   const [customName, setCustomName] = useState("MY FIRM");
-  const [acctSize, setAcctSize] = useState(10000);
+  const [acctSize,   setAcctSize]   = useState(10000);
   const [customAcct, setCustomAcct] = useState(10000);
-  const [phases, setPhases] = useState(() => FIRMS.ftmo.phases.map(p => ({ ...p })));
-  const [activeTab, setActiveTab] = useState(0);
-  const [strat, setStrat] = useState({ winRate: 50, rr: 2, riskPct: 1, tpd: 3 });
-  const [results, setResults] = useState(null);
-  const [running, setRunning] = useState(false);
-  const [modalType, setModalType] = useState(null);
+  const [phases,     setPhases]     = useState(() => FIRMS.ftmo.phases.map(p => ({ ...p })));
+  const [activeTab,  setActiveTab]  = useState(0);
+  const [strat,      setStrat]      = useState({ winRate: 50, rr: 2, riskPct: 1, tpd: 3 });
+  const [results,    setResults]    = useState(null);
+  const [running,    setRunning]    = useState(false);
+  const [modalType,  setModalType]  = useState(null);
+  // Share state
+  const [sharing,    setSharing]    = useState(false);
+  const [shareToast, setShareToast] = useState(null); // null | 'copied' | 'downloaded' | 'error'
 
-  const firm = FIRMS[firmKey];
-  const acct = firmKey === "custom" ? customAcct : acctSize;
+  const firm             = FIRMS[firmKey];
+  const acct             = firmKey === "custom" ? customAcct : acctSize;
+  const firmDisplayName  = firmKey === "custom" ? customName : firm.name;
 
-  /* Firm selection */
+  // Auto-dismiss share toast after 3 s
+  useEffect(() => {
+    if (!shareToast) return;
+    const timer = setTimeout(() => setShareToast(null), 3000);
+    return () => clearTimeout(timer);
+  }, [shareToast]);
+
+  /* ── Firm selection ──────────────────────────────────── */
   const pickFirm = k => {
     setFirmKey(k);
-    const np = FIRMS[k].phases.map(p => ({ ...p }));
-    setPhases(np);
+    setPhases(FIRMS[k].phases.map(p => ({ ...p })));
     if (FIRMS[k].sizes.length > 0) setAcctSize(FIRMS[k].sizes[0]);
     setActiveTab(0);
     setResults(null);
   };
 
-  /* Phase CRUD — fixed tab management */
+  /* ── Phase CRUD ──────────────────────────────────────── */
   const editPhase = (idx, field, v) => {
     const n = parseFloat(v);
     if (!isNaN(n) && n >= 0) setPhases(prev => prev.map((p, i) => i === idx ? { ...p, [field]: n } : p));
@@ -462,10 +815,10 @@ export default function App() {
 
   const addPhase = () => {
     if (phases.length >= 3) return;
-    const newPhase = { name: `PHASE ${phases.length + 1}`, profitTarget: 5, maxDD: 10, dailyDD: 5, minDays: 10, maxDays: 60 };
+    const newPhase  = { name: `PHASE ${phases.length + 1}`, profitTarget: 5, maxDD: 10, dailyDD: 5, minDays: 10, maxDays: 60 };
     const newPhases = [...phases, newPhase];
     setPhases(newPhases);
-    setActiveTab(newPhases.length - 1); // auto-switch to new phase
+    setActiveTab(newPhases.length - 1);
   };
 
   const delPhase = idx => {
@@ -475,21 +828,27 @@ export default function App() {
     setActiveTab(Math.max(0, Math.min(activeTab, newPhases.length - 1)));
   };
 
-  /* Simulation */
+  /* ── Simulation ──────────────────────────────────────── */
   const run = () => {
     setRunning(true);
+    setResults(null); // clear stale results immediately
+    // setTimeout(60) yields to the browser so the "COMPUTING…" state renders
+    // before the synchronous MC loop starts (~30–80 ms for 2-phase × 5 000)
     setTimeout(() => {
       try {
-        const pr = phases.map(phase => simulate({ winRate: strat.winRate, rr: strat.rr, riskPct: strat.riskPct, tradesPerDay: strat.tpd, phase }));
+        const pr = phases.map(phase => simulate({
+          winRate: strat.winRate, rr: strat.rr,
+          riskPct: strat.riskPct, tradesPerDay: strat.tpd, phase,
+        }));
         setResults({
-          overall: pr.reduce((a, r) => a * r.prob, 1),
-          probs: pr.map(r => r.prob),
-          trades: pr.reduce((a, r) => a + r.expectedTrades, 0),
-          days: pr.reduce((a, r) => a + r.expectedDays, 0),
-          profit: pr.reduce((a, r) => a + r.expectedProfit, 0),
-          avgDD: pr[0].avgDD,
-          ruin: pr[0].riskRuin,
-          curves: pr[0].curves,
+          overall:      pr.reduce((a, r) => a * r.prob, 1),
+          probs:        pr.map(r => r.prob),
+          trades:       pr.reduce((a, r) => a + r.expectedTrades, 0),
+          days:         pr.reduce((a, r) => a + r.expectedDays, 0),
+          profit:       pr.reduce((a, r) => a + r.expectedProfit, 0),
+          avgDD:        pr[0].avgDD,
+          ruin:         pr[0].riskRuin,
+          curves:       pr[0].curves,
           phaseResults: pr,
         });
       } finally {
@@ -498,22 +857,59 @@ export default function App() {
     }, 60);
   };
 
-  /* Derived */
-  const ev = (strat.winRate / 100) * strat.rr - (1 - strat.winRate / 100);
-  const bkWR = 100 / (strat.rr + 1);
-  const evCol = ev >= 0 ? "#99ff00" : "#ff3300";
-  const minTrades = Math.ceil(phases[0].profitTarget / ((strat.riskPct / 100) * strat.rr * (strat.winRate / 100)));
-  const rng = (v, lo, hi) => ({ background: `linear-gradient(90deg,var(--amber) ${((v - lo) / (hi - lo)) * 100}%,var(--bg2) ${((v - lo) / (hi - lo)) * 100}%)` });
+  /* ── Share handler ───────────────────────────────────── */
+  const handleShare = useCallback(async () => {
+    if (!results || sharing) return;
+    setSharing(true);
+    try {
+      const blob = await generateShareCard(results, strat, phases, acct, firmDisplayName);
 
-  /* Micro styles */
-  const LBL = { fontFamily: "var(--mono)", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: "var(--text2)", display: "block", marginBottom: 8 };
+      // Prefer Clipboard API (requires user gesture — button click qualifies)
+      if (navigator.clipboard?.write && typeof ClipboardItem !== 'undefined') {
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          setShareToast('copied');
+          return;
+        } catch (_) { /* clipboard permission denied — fall through to download */ }
+      }
+
+      // Fallback: trigger file download
+      const url = URL.createObjectURL(blob);
+      const a   = document.createElement('a');
+      a.href     = url;
+      a.download = `fundedcalc-${Math.round(results.overall * 100)}pct.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setShareToast('downloaded');
+    } catch (e) {
+      console.error('[FundedCalc] Share error:', e);
+      setShareToast('error');
+    } finally {
+      setSharing(false);
+    }
+  }, [results, strat, phases, acct, firmDisplayName, sharing]);
+
+  /* ── Derived values ──────────────────────────────────── */
+  const ev        = (strat.winRate / 100) * strat.rr - (1 - strat.winRate / 100);
+  const bkWR      = 100 / (strat.rr + 1);
+  const evCol     = ev >= 0 ? "#99ff00" : "#ff3300";
+  const minTrades = Math.ceil(phases[0].profitTarget / ((strat.riskPct / 100) * strat.rr * (strat.winRate / 100)));
+  const rng       = (v, lo, hi) => ({ background: `linear-gradient(90deg,var(--amber) ${((v - lo) / (hi - lo)) * 100}%,var(--bg2) ${((v - lo) / (hi - lo)) * 100}%)` });
+
+  /* ── Micro styles ────────────────────────────────────── */
+  const LBL  = { fontFamily: "var(--mono)", fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: "var(--text2)", display: "block", marginBottom: 8 };
   const safe = activeTab < phases.length ? activeTab : 0;
 
+  /* ═══════════════════════════════════════════════════════
+     JSX
+  ════════════════════════════════════════════════════════ */
   return (
     <div style={{ fontFamily: "var(--mono)", background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
       <style>{CSS}</style>
 
-      {/* ══ HEADER ══════════════════════════════════════════════════ */}
+      {/* ══ HEADER ══════════════════════════════════════════ */}
       <header style={{ background: "#050300", borderBottom: "2px solid #2a1400", padding: "0 24px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,170,0,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,170,0,.025) 1px,transparent 1px)", backgroundSize: "44px 44px" }} />
         <div style={{ position: "absolute", top: -50, left: "50%", transform: "translateX(-50%)", width: 500, height: 120, background: "radial-gradient(ellipse,rgba(255,170,0,.07) 0%,transparent 70%)", pointerEvents: "none" }} />
@@ -522,7 +918,7 @@ export default function App() {
             <div style={{ fontFamily: "var(--vt)", fontSize: 21, color: "var(--amber)", letterSpacing: 3, ...glow("#ffaa00") }}>
               {t.title}<span className="blink" style={{ color: "var(--amber3)" }}>_</span>
             </div>
-            <div style={{ fontSize: 9, color: "var(--text2)", letterSpacing: 1, marginTop: 2 }}>{t.sub}</div>
+            <div style={{ fontSize: 10, color: "var(--text2)", letterSpacing: 1.5, marginTop: 2 }}>{t.sub}</div>
           </div>
           <button onClick={() => setLang(l => l === "en" ? "fr" : "en")}
             style={{ background: "var(--bg2)", border: "1px solid var(--dimb)", color: "var(--amber)", padding: "6px 14px", cursor: "pointer", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: 2 }}>
@@ -531,14 +927,14 @@ export default function App() {
         </div>
       </header>
 
-      {/* ══ MAIN ════════════════════════════════════════════════════ */}
+      {/* ══ MAIN ════════════════════════════════════════════ */}
       <main style={{ maxWidth: 1200, margin: "0 auto", padding: "22px 20px" }}>
         <div className="twocol" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
 
-          {/* ──── LEFT ──── */}
+          {/* ──── LEFT COLUMN ──── */}
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
 
-            {/* FIRM + ACCOUNT ─────────────────────────────────── */}
+            {/* FIRM + ACCOUNT */}
             <div className="panel">
               <div className="shd">{t.firm}</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 14 }}>
@@ -571,7 +967,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* PHASES ─────────────────────────────────────────── */}
+            {/* PHASES */}
             <div className="panel">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
                 <div className="shd" style={{ marginBottom: 0, borderBottom: "none" }}>{t.phases}</div>
@@ -583,7 +979,6 @@ export default function App() {
                 )}
               </div>
 
-              {/* tabs */}
               <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" }}>
                 {phases.map((p, i) => (
                   <button key={i} className={`ptab${safe === i ? " on" : ""}`} onClick={() => setActiveTab(i)}>
@@ -592,15 +987,14 @@ export default function App() {
                 ))}
               </div>
 
-              {/* phase fields */}
               {phases.length > 0 && (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                   {[
                     { f: "profitTarget", label: `🎯 ${t.target}`, sfx: "%" },
-                    { f: "maxDD", label: `📉 ${t.maxdd}`, sfx: "%" },
-                    { f: "dailyDD", label: `📅 ${t.daily}`, sfx: "%" },
-                    { f: "minDays", label: `▸ ${t.mind}`, sfx: "D" },
-                    { f: "maxDays", label: `⏳ ${t.maxd}`, sfx: "D" },
+                    { f: "maxDD",        label: `📉 ${t.maxdd}`,  sfx: "%" },
+                    { f: "dailyDD",      label: `📅 ${t.daily}`,  sfx: "%" },
+                    { f: "minDays",      label: `▸ ${t.mind}`,    sfx: "D" },
+                    { f: "maxDays",      label: `⏳ ${t.maxd}`,   sfx: "D" },
                   ].map(({ f, label, sfx }) => (
                     <div key={f}>
                       <span style={{ ...LBL, fontSize: 9 }}>{label}</span>
@@ -626,14 +1020,14 @@ export default function App() {
               )}
             </div>
 
-            {/* STRATEGY ───────────────────────────────────────── */}
+            {/* STRATEGY */}
             <div className="panel">
               <div className="shd">{t.strat}</div>
 
               {[
-                { key: "winRate", label: `🎯 ${t.wr}`, min: 20, max: 85, step: 1, sfx: "%" },
-                { key: "riskPct", label: `💰 ${t.risk}`, min: 0.1, max: 5, step: 0.1, sfx: "%" },
-                { key: "tpd", label: `📊 ${t.tpd}`, min: 1, max: 20, step: 1, sfx: "" },
+                { key: "winRate", label: `🎯 ${t.wr}`,   min: 20, max: 85, step: 1,   sfx: "%" },
+                { key: "riskPct", label: `💰 ${t.risk}`,  min: 0.1, max: 5, step: 0.1, sfx: "%" },
+                { key: "tpd",     label: `📊 ${t.tpd}`,   min: 1,  max: 20, step: 1,   sfx: ""  },
               ].map(({ key, label, min, max, step, sfx }) => (
                 <div key={key} style={{ marginBottom: 16 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
@@ -663,22 +1057,22 @@ export default function App() {
                 </select>
               </div>
 
-              {/* Metrics row */}
+              {/* Inline derived metrics */}
               <div style={{ borderTop: "1px dashed var(--dim)", paddingTop: 12, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 7 }}>
                 {[
-                  { label: t.ev, val: `${ev >= 0 ? "+" : ""}${ev.toFixed(3)}R`, col: evCol },
-                  { label: t.bk, val: `${bkWR.toFixed(1)}%`, col: strat.winRate >= bkWR ? "#99ff00" : "#ff7700" },
-                  { label: t.mintrades, val: minTrades, col: "#ffaa00" },
+                  { label: t.ev,         val: `${ev >= 0 ? "+" : ""}${ev.toFixed(3)}R`, col: evCol },
+                  { label: t.bk,         val: `${bkWR.toFixed(1)}%`,                    col: strat.winRate >= bkWR ? "#99ff00" : "#ff7700" },
+                  { label: t.mintrades,  val: minTrades,                                col: "#ffaa00" },
                 ].map(({ label, val, col }) => (
                   <div key={label} style={{ background: "var(--bg2)", border: "1px solid var(--dim)", padding: "8px 9px", textAlign: "center" }}>
                     <div style={{ ...LBL, fontSize: 8, textAlign: "center", marginBottom: 4 }}>{label}</div>
-                    <div style={{ fontFamily: "var(--vt)", fontSize: 19, color: col, ...glow(col) }}>{val}</div>
+                    <div style={{ fontFamily: "var(--vt)", fontSize: 22, color: col, ...glow(col) }}>{val}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* RUN */}
+            {/* RUN BUTTON */}
             <button className="runbtn" onClick={run} disabled={running}>
               <span>
                 {running ? (
@@ -691,7 +1085,7 @@ export default function App() {
             </button>
           </div>
 
-          {/* ──── RIGHT ──── */}
+          {/* ──── RIGHT COLUMN ──── */}
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {!results ? (
               <div className="panel" style={{ minHeight: 440, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", borderStyle: "dashed" }}>
@@ -701,7 +1095,7 @@ export default function App() {
               </div>
             ) : (
               <>
-                {/* GAUGE */}
+                {/* OVERALL GAUGE */}
                 <div className="fu" style={{ background: "var(--bg1)", border: `2px solid ${pCol(results.overall)}`, padding: 18, boxShadow: `0 0 24px ${pCol(results.overall)}22` }}>
                   <div className="shd" style={{ color: pCol(results.overall), borderColor: pCol(results.overall) }}>{t.overall}</div>
                   <RetroGauge value={results.overall} />
@@ -713,7 +1107,7 @@ export default function App() {
                   <div style={{ textAlign: "center", fontSize: 10, color: "var(--dimb)", marginTop: 6, letterSpacing: 1 }}>5,000 {t.sims}</div>
                 </div>
 
-                {/* PHASE BARS */}
+                {/* PHASE BARS + STATS GRID */}
                 <div className="panel fu1">
                   {results.probs.map((p, i) => (
                     <div key={i} style={{ marginBottom: 14 }}>
@@ -727,40 +1121,57 @@ export default function App() {
                     </div>
                   ))}
 
-                  {/* Stats grid */}
+                  {/* Stats grid — v2.2: larger values, clearer labels */}
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 14, paddingTop: 14, borderTop: "1px dashed var(--dim)" }}>
                     {[
-                      { label: t.trades, val: results.trades, col: "#ffaa00", icon: "🔄" },
-                      { label: t.days, val: `${results.days}D`, col: "#ffdd44", icon: "📅" },
-                      { label: t.ruin, val: `${(results.ruin * 100).toFixed(1)}%`, col: "#ff5500", icon: "💀" },
-                      { label: t.dd, val: `${results.avgDD.toFixed(2)}%`, col: "#ff8800", icon: "📉" },
-                      { label: t.profit, val: `+${results.profit.toFixed(2)}%`, col: "#99ff00", icon: "💰", sub: acct > 0 ? `$${fmt(acct * results.profit / 100, 0)}` : null },
+                      { label: t.trades, val: results.trades,                         col: "#ffaa00", icon: "🔄" },
+                      { label: t.days,   val: `${results.days}D`,                      col: "#ffdd44", icon: "📅" },
+                      { label: t.ruin,   val: `${(results.ruin * 100).toFixed(1)}%`,   col: "#ff5500", icon: "💀" },
+                      { label: t.dd,     val: `${results.avgDD.toFixed(2)}%`,           col: "#ff8800", icon: "📉" },
+                      { label: t.profit, val: `+${results.profit.toFixed(2)}%`,         col: "#99ff00", icon: "💰",
+                        sub: acct > 0 ? `$${fmt(acct * results.profit / 100, 0)}` : null },
                     ].map(({ label, val, col, icon, sub }) => (
                       <div key={label} className="sbox">
-                        <div style={{ ...LBL, fontSize: 9, marginBottom: 4 }}>{icon} {label}</div>
-                        <div style={{ fontFamily: "var(--vt)", fontSize: 22, color: col, ...glow(col) }}>{val}</div>
+                        {/* v2.2: improved label readability */}
+                        <div style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase", color: "var(--text2)", display: "block", marginBottom: 5 }}>
+                          {icon} {label}
+                        </div>
+                        {/* v2.2: fontSize 22 → 26 for clearer metric reading */}
+                        <div style={{ fontFamily: "var(--vt)", fontSize: 26, color: col, ...glow(col) }}>{val}</div>
                         {sub && <div style={{ fontSize: 10, color: "var(--dimb)", marginTop: 2, letterSpacing: 1 }}>{sub}</div>}
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* CHART */}
+                {/* EQUITY CHART */}
                 <div className="panel fu2">
                   <div className="shd">{t.chart}</div>
                   <EquityCurve curves={results.curves} phase={phases[0]} />
                   <div style={{ display: "flex", gap: 16, marginTop: 8, flexWrap: "wrap" }}>
                     <span style={{ fontSize: 10, color: "rgba(153,255,0,.7)", letterSpacing: 1 }}>▬ {results.curves.filter(c => c.pass).length} {t.passing}</span>
-                    <span style={{ fontSize: 10, color: "rgba(255,50,0,.7)", letterSpacing: 1 }}>▬ {results.curves.filter(c => !c.pass).length} {t.failing}</span>
+                    <span style={{ fontSize: 10, color: "rgba(255,50,0,.7)",  letterSpacing: 1 }}>▬ {results.curves.filter(c => !c.pass).length} {t.failing}</span>
                   </div>
                   <div style={{ fontSize: 9, color: "var(--dimb)", marginTop: 4, letterSpacing: 1 }}>* {t.ddnote}</div>
                 </div>
+
+                {/* SHARE BUTTON */}
+                <button className="sharebtn" onClick={handleShare} disabled={sharing}>
+                  {sharing ? (
+                    <>
+                      <span style={{ display: "inline-block", animation: "spin .7s linear infinite" }}>◌</span>
+                      {t.sharing}
+                    </>
+                  ) : (
+                    <>[ ↑ {t.share} ]</>
+                  )}
+                </button>
               </>
             )}
           </div>
         </div>
 
-        {/* ══ ADVICE ══════════════════════════════════════════════════ */}
+        {/* ══ ADVICE ══════════════════════════════════════════ */}
         {results && (() => {
           const advice = getAdvice(strat, { prob: results.overall, riskRuin: results.ruin, avgDD: results.avgDD }, phases, lang);
           return (
@@ -769,7 +1180,8 @@ export default function App() {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(290px,1fr))", gap: 10 }}>
                 {advice.map((a, i) => (
                   <div key={i} className="adv" style={{ borderColor: AC[a.type] }}>
-                    <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: AC[a.type], lineHeight: 1.7, letterSpacing: .3 }}>{a[lang]}</div>
+                    {/* v2.2: fontSize 11 → 12, lineHeight 1.7 → 1.85 */}
+                    <div style={{ fontFamily: "var(--mono)", fontSize: 12, color: AC[a.type], lineHeight: 1.85, letterSpacing: .35 }}>{a[lang]}</div>
                   </div>
                 ))}
               </div>
@@ -777,25 +1189,27 @@ export default function App() {
           );
         })()}
 
-        {/* ══ HOW TO USE ══════════════════════════════════════════════ */}
+        {/* ══ HOW TO USE ════════════════════════════════════ */}
         <div className="panel" style={{ marginTop: 14 }}>
           <div className="shd">{t.how}</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {t.steps.map((step, i) => (
               <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <div style={{ fontFamily: "var(--vt)", fontSize: 20, color: "var(--amber3)", minWidth: 30, flexShrink: 0 }}>{`0${i + 1}`.slice(-2)}</div>
+                <div style={{ fontFamily: "var(--vt)", fontSize: 22, color: "var(--amber3)", minWidth: 30, flexShrink: 0 }}>{`0${i + 1}`.slice(-2)}</div>
                 <div style={{ width: 1, background: "var(--dim)", alignSelf: "stretch", flexShrink: 0 }} />
-                <p style={{ margin: 0, color: "var(--text)", fontSize: 12, lineHeight: 1.75, letterSpacing: .5 }}>{step}</p>
+                {/* v2.2: fontSize 12 → 13, lineHeight 1.75 → 1.85, color: text → amber at .8 opacity */}
+                <p style={{ margin: 0, color: "var(--amber)", opacity: .8, fontSize: 13, lineHeight: 1.85, letterSpacing: .4 }}>{step}</p>
               </div>
             ))}
           </div>
           <div style={{ marginTop: 14, padding: "10px 14px", border: "1px solid var(--dimb)", borderLeft: "3px solid var(--amber3)" }}>
-            <p style={{ margin: 0, color: "var(--dimb)", fontSize: 11, lineHeight: 1.7, letterSpacing: .3 }}>{t.disclaimer}</p>
+            {/* v2.2: dimb → text2 for better disclaimer readability */}
+            <p style={{ margin: 0, color: "var(--text2)", fontSize: 11, lineHeight: 1.75, letterSpacing: .3 }}>{t.disclaimer}</p>
           </div>
         </div>
       </main>
 
-      {/* ══ FOOTER ══════════════════════════════════════════════════ */}
+      {/* ══ FOOTER ══════════════════════════════════════════ */}
       <footer style={{ marginTop: 36, borderTop: "2px solid #ffaa00", background: "#000000", padding: "24px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 14, marginBottom: 16 }}>
@@ -808,9 +1222,10 @@ export default function App() {
             </div>
             <div style={{ display: "flex", gap: 20 }}>
               {[t.priv, t.terms, t.cont, t.legNotice].map(l => (
-                <span key={l} onClick={() => setModalType(l)} style={{ color: "var(--dimb)", fontSize: 10, cursor: "pointer", letterSpacing: 1, transition: "color .15s" }}
+                <span key={l} onClick={() => setModalType(l)}
+                  style={{ color: "var(--dimb)", fontSize: 10, cursor: "pointer", letterSpacing: 1, transition: "color .15s" }}
                   onMouseEnter={e => e.target.style.color = "var(--amber3)"}
-                  onMouseLeave={e => e.target.style.color = "var(--dimb)"}>
+                  onMouseLeave={e => e.target.style.color  = "var(--dimb)"}>
                   {l}
                 </span>
               ))}
@@ -825,13 +1240,16 @@ export default function App() {
         </div>
       </footer>
 
-      {/* MODAL */}
+      {/* ══ LEGAL MODAL ════════════════════════════════════ */}
       {modalType && (
-        <div onClick={() => setModalType(null)} style={{ position: "fixed", inset: 0, background: "#121212", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10000, cursor: "pointer" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "var(--bg1)", border: "2px solid var(--amber)", maxWidth: 600, width: "90%", maxHeight: "80vh", overflow: "auto", padding: 24, cursor: "default" }}>
+        <div onClick={() => setModalType(null)}
+          style={{ position: "fixed", inset: 0, background: "#121212", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10000, cursor: "pointer" }}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ background: "var(--bg1)", border: "2px solid var(--amber)", maxWidth: 600, width: "90%", maxHeight: "80vh", overflow: "auto", padding: 24, cursor: "default" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <div style={{ fontFamily: "var(--vt)", fontSize: 24, color: "var(--amber)", letterSpacing: 2 }}>{modalType}</div>
-              <button onClick={() => setModalType(null)} style={{ background: "none", border: "none", color: "var(--amber)", fontSize: 24, cursor: "pointer", fontFamily: "var(--mono)" }}>X</button>
+              <button onClick={() => setModalType(null)}
+                style={{ background: "none", border: "none", color: "var(--amber)", fontSize: 24, cursor: "pointer", fontFamily: "var(--mono)" }}>X</button>
             </div>
             <div style={{ color: "var(--text)", fontSize: 12, lineHeight: 1.8, letterSpacing: .3 }}>
               {modalType === t.priv && (
@@ -863,14 +1281,11 @@ export default function App() {
                   <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>ÉDITEUR DU SITE</p>
                   <p style={{ marginBottom: 12 }}>Le site et l'application FundedCalc sont édités par Raythan Web Design, entreprise individuelle basée à Nantes, France.</p>
                   <p style={{ marginBottom: 12 }}>Contact : raythanwebdesign@gmail.com</p>
-
                   <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>HÉBERGEUR DU SITE</p>
                   <p style={{ marginBottom: 12 }}>Le site est hébergé par la société Vercel Inc., situé au 650 California St, San Francisco, CA 94108, États-Unis.</p>
                   <p style={{ marginBottom: 12 }}>Site web : https://vercel.com</p>
-
                   <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>PROPRIÉTÉ INTELLECTUELLE</p>
                   <p style={{ marginBottom: 12 }}>L'ensemble des contenus (textes, graphismes, logos, codes sources, simulateurs) présents sur ce site est la propriété exclusive de Raythan Web Design. Toute reproduction ou représentation totale ou partielle de ce site est interdite sans autorisation préalable.</p>
-
                   <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>DONNÉES PERSONNELLES & COOKIES</p>
                   <p>Conformément au RGPD, ce site n'utilise aucun cookie de traçage, ne collecte aucune donnée personnelle et n'utilise aucun service tiers. Toutes les simulations mathématiques sont exécutées localement dans le navigateur de l'utilisateur.</p>
                 </>
@@ -880,20 +1295,26 @@ export default function App() {
                   <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>WEBSITE EDITOR</p>
                   <p style={{ marginBottom: 12 }}>The website and the FundedCalc application are edited by Raythan Web Design, a sole proprietorship based in Nantes, France.</p>
                   <p style={{ marginBottom: 12 }}>Contact: raythanwebdesign@gmail.com</p>
-
                   <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>WEB HOSTING</p>
                   <p style={{ marginBottom: 12 }}>The website is hosted by Vercel Inc., located at 650 California St, San Francisco, CA 94108, USA.</p>
                   <p style={{ marginBottom: 12 }}>Website: https://vercel.com</p>
-
                   <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>INTELLECTUAL PROPERTY</p>
                   <p style={{ marginBottom: 12 }}>All content (text, graphics, logos, source code, simulators) on this website is the exclusive property of Raythan Web Design. Any total or partial reproduction or representation of this site is strictly prohibited without prior authorization.</p>
-
                   <p style={{ marginBottom: 12, fontWeight: "bold", color: "var(--amber)" }}>PERSONAL DATA & COOKIES</p>
                   <p>In compliance with the GDPR, this website does not use any tracking cookies, collects no personal data, and uses no third-party services. All mathematical simulations are executed entirely client-side within the user's browser.</p>
                 </>
               )}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ══ SHARE TOAST ════════════════════════════════════ */}
+      {shareToast && (
+        <div className="toast">
+          {shareToast === 'copied'     && t.shareCopied}
+          {shareToast === 'downloaded' && t.shareDownloaded}
+          {shareToast === 'error'      && t.shareError}
         </div>
       )}
     </div>

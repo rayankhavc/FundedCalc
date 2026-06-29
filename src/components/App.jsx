@@ -118,7 +118,7 @@ input[type=range]::-webkit-slider-thumb{
   background-image:repeating-linear-gradient(90deg,transparent 0,transparent 5px,rgba(0,0,0,.35) 5px,rgba(0,0,0,.35) 6px);
 }
 
-/* STAT BOXES — v2.2: improved readability */
+/* STAT BOXES — v3.8: improved readability */
 .sbox{background:var(--bg2);border:1px solid var(--dim);padding:12px 14px;}
 
 /* SECTION HEADER */
@@ -152,7 +152,7 @@ input[type=range]::-webkit-slider-thumb{
 const TR = {
   en:{
     title:"PROP FIRM CHALLENGE CALCULATOR",
-    sub:"MONTE CARLO ENGINE v2.2  ·  STRATEGY PROBABILITY ANALYZER  ·  BY RAYTHAN WEB DESIGN",
+    sub:"MONTE CARLO ENGINE v3.8  ·  STRATEGY PROBABILITY ANALYZER BY RAYTHAN WEB DESIGN",
     firm:"> PROP FIRM",acct:"> ACCOUNT SIZE",
     phases:"> CHALLENGE PHASES",add:"[+ ADD PHASE]",del:"[REMOVE]",
     target:"PROFIT TARGET",maxdd:"MAX DRAWDOWN",daily:"DAILY DRAWDOWN",
@@ -194,7 +194,7 @@ const TR = {
   },
   fr:{
     title:"CALCULATEUR CHALLENGE PROP FIRM",
-    sub:"MOTEUR MONTE CARLO v2.2  ·  ANALYSEUR DE PROBABILITÉ STRATÉGIQUE  ·  BY RAYTHAN WEB DESIGN",
+    sub:"MOTEUR MONTE CARLO v3.8  ·  ANALYSEUR DE PROBABILITÉ STRATÉGIQUE BY RAYTHAN WEB DESIGN",
     firm:"> PROP FIRM",acct:"> TAILLE DU COMPTE",
     phases:"> PHASES DU CHALLENGE",add:"[+ AJOUTER PHASE]",del:"[SUPPRIMER]",
     target:"OBJECTIF PROFIT",maxdd:"DRAWDOWN MAX",daily:"DRAWDOWN JOURNALIER",

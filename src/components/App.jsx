@@ -791,6 +791,8 @@ export default function App() {
   // Share state
   const [sharing,    setSharing]    = useState(false);
   const [shareToast, setShareToast] = useState(null); // null | 'copied' | 'downloaded' | 'error'
+  // Raw string buffer for phase inputs — lets user clear/retype freely without React clamping back
+  const [phaseRaw,   setPhaseRaw]   = useState({});
 
   const firm             = FIRMS[firmKey];
   const acct             = acctSize;
@@ -818,6 +820,9 @@ export default function App() {
     const n = parseFloat(v);
     if (!isNaN(n)) setPhases(prev => prev.map((p, i) => i === idx ? { ...p, [field]: n } : p));
   };
+
+  // Clear raw draft when switching tab so stale strings don't bleed across phases
+  const switchTab = i => { setActiveTab(i); setPhaseRaw({}); };
 
   const addPhase = () => {
     if (phases.length >= 3) return;
@@ -1014,7 +1019,7 @@ export default function App() {
 
               <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" }}>
                 {phases.map((p, i) => (
-                  <button key={i} className={`ptab${safe === i ? " on" : ""}`} onClick={() => setActiveTab(i)}>
+                  <button key={i} className={`ptab${safe === i ? " on" : ""}`} onClick={() => switchTab(i)}>
                     {p.name}
                   </button>
                 ))}
@@ -1033,8 +1038,21 @@ export default function App() {
                       <span style={{ ...LBL, fontSize: 9 }}>{label}</span>
                       <div style={{ position: "relative" }}>
                         <input className="ni" type="text" inputMode="decimal"
-                          value={phases[safe][f]}
-                          onChange={e => editPhase(safe, f, e.target.value)}
+                          value={phaseRaw[`${safe}-${f}`] ?? String(phases[safe][f])}
+                          onChange={e => {
+                            // Store raw string while typing — never block the user
+                            setPhaseRaw(prev => ({ ...prev, [`${safe}-${f}`]: e.target.value }));
+                          }}
+                          onBlur={e => {
+                            const n = parseFloat(e.target.value);
+                            // Commit numeric value; if blank/invalid revert to previous
+                            if (!isNaN(n)) editPhase(safe, f, String(n));
+                            setPhaseRaw(prev => {
+                              const next = { ...prev };
+                              delete next[`${safe}-${f}`];
+                              return next;
+                            });
+                          }}
                           style={{ paddingRight: 26 }} />
                         <span style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", color: "var(--dimb)", fontSize: 11, pointerEvents: "none" }}>{sfx}</span>
                       </div>
